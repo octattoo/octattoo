@@ -1,0 +1,26 @@
+### A person who receives tattoos. Scoped to a single Artist Profile.
+class: Customer
+table: customer
+
+fields:
+  id: UuidValue?, defaultPersist=random_v7
+  ### The artist profile this customer belongs to.
+  artistProfileId: UuidValue
+  ### Display name.
+  name: String
+  ### Contact email (at least one of email/phone required).
+  email: String?
+  ### Contact phone (at least one of email/phone required).
+  phone: String?
+  ### Free-form notes.
+  notes: String?
+  ### When this customer was created.
+  createdAt: DateTime?, defaultPersist=now
+
+indexes:
+  customer_artist_profile_id_idx:
+    fields: artistProfileId
+  customer_email_idx:
+    fields: artistProfileId, email
+  customer_phone_idx:
+    fields: artistProfileId, phone

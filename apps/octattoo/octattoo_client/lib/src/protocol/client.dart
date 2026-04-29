@@ -16,8 +16,11 @@ import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i3;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i4;
-import 'package:octattoo_client/src/protocol/greetings/greeting.dart' as _i5;
-import 'protocol.dart' as _i6;
+import 'package:octattoo_client/src/protocol/customer/create_customer_result.dart'
+    as _i5;
+import 'package:octattoo_client/src/protocol/customer/customer.dart' as _i6;
+import 'package:octattoo_client/src/protocol/greetings/greeting.dart' as _i7;
+import 'protocol.dart' as _i8;
 
 /// {@category Endpoint}
 class EndpointArtistProfile extends _i1.EndpointRef {
@@ -257,6 +260,74 @@ class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
   );
 }
 
+/// {@category Endpoint}
+class EndpointCustomer extends _i1.EndpointRef {
+  EndpointCustomer(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'customer';
+
+  /// Creates a customer, returning potential duplicates.
+  _i2.Future<_i5.CreateCustomerResult> createCustomer({
+    required String name,
+    String? email,
+    String? phone,
+    String? notes,
+  }) => caller.callServerEndpoint<_i5.CreateCustomerResult>(
+    'customer',
+    'createCustomer',
+    {
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'notes': notes,
+    },
+  );
+
+  /// Lists customers for the current artist profile.
+  _i2.Future<List<_i6.Customer>> listCustomers({String? search}) =>
+      caller.callServerEndpoint<List<_i6.Customer>>(
+        'customer',
+        'listCustomers',
+        {'search': search},
+      );
+
+  /// Gets a single customer by ID (scoped to artist profile).
+  _i2.Future<_i6.Customer?> getCustomer(_i1.UuidValue customerId) =>
+      caller.callServerEndpoint<_i6.Customer?>(
+        'customer',
+        'getCustomer',
+        {'customerId': customerId},
+      );
+
+  /// Updates a customer (scoped to artist profile).
+  _i2.Future<_i6.Customer?> updateCustomer({
+    required _i1.UuidValue customerId,
+    required String name,
+    String? email,
+    String? phone,
+    String? notes,
+  }) => caller.callServerEndpoint<_i6.Customer?>(
+    'customer',
+    'updateCustomer',
+    {
+      'customerId': customerId,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'notes': notes,
+    },
+  );
+
+  /// Deletes a customer (scoped to artist profile).
+  _i2.Future<bool> deleteCustomer(_i1.UuidValue customerId) =>
+      caller.callServerEndpoint<bool>(
+        'customer',
+        'deleteCustomer',
+        {'customerId': customerId},
+      );
+}
+
 /// This is an example endpoint that returns a greeting message through
 /// its [hello] method.
 /// {@category Endpoint}
@@ -267,8 +338,8 @@ class EndpointGreeting extends _i1.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i2.Future<_i5.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i5.Greeting>(
+  _i2.Future<_i7.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i7.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -306,7 +377,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i6.Protocol(),
+         _i8.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -318,6 +389,7 @@ class Client extends _i1.ServerpodClientShared {
     artistProfile = EndpointArtistProfile(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
+    customer = EndpointCustomer(this);
     greeting = EndpointGreeting(this);
     modules = Modules(this);
   }
@@ -328,6 +400,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointJwtRefresh jwtRefresh;
 
+  late final EndpointCustomer customer;
+
   late final EndpointGreeting greeting;
 
   late final Modules modules;
@@ -337,6 +411,7 @@ class Client extends _i1.ServerpodClientShared {
     'artistProfile': artistProfile,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,
+    'customer': customer,
     'greeting': greeting,
   };
 

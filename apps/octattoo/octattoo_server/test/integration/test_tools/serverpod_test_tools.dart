@@ -16,7 +16,10 @@ import 'package:serverpod/serverpod.dart' as _i2;
 import 'dart:async' as _i3;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
-import 'package:octattoo_server/src/generated/greetings/greeting.dart' as _i5;
+import 'package:octattoo_server/src/generated/customer/create_customer_result.dart'
+    as _i5;
+import 'package:octattoo_server/src/generated/customer/customer.dart' as _i6;
+import 'package:octattoo_server/src/generated/greetings/greeting.dart' as _i7;
 import 'package:octattoo_server/src/generated/protocol.dart';
 import 'package:octattoo_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -137,6 +140,8 @@ class TestEndpoints {
 
   late final _JwtRefreshEndpoint jwtRefresh;
 
+  late final _CustomerEndpoint customer;
+
   late final _GreetingEndpoint greeting;
 }
 
@@ -156,6 +161,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     jwtRefresh = _JwtRefreshEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    customer = _CustomerEndpoint(
       endpoints,
       serializationManager,
     );
@@ -525,6 +534,190 @@ class _JwtRefreshEndpoint {
   }
 }
 
+class _CustomerEndpoint {
+  _CustomerEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i5.CreateCustomerResult> createCustomer(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String name,
+    String? email,
+    String? phone,
+    String? notes,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'customer',
+            method: 'createCustomer',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'customer',
+          methodName: 'createCustomer',
+          parameters: _i1.testObjectToJson({
+            'name': name,
+            'email': email,
+            'phone': phone,
+            'notes': notes,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i5.CreateCustomerResult>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<List<_i6.Customer>> listCustomers(
+    _i1.TestSessionBuilder sessionBuilder, {
+    String? search,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'customer',
+            method: 'listCustomers',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'customer',
+          methodName: 'listCustomers',
+          parameters: _i1.testObjectToJson({'search': search}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i6.Customer>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i6.Customer?> getCustomer(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue customerId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'customer',
+            method: 'getCustomer',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'customer',
+          methodName: 'getCustomer',
+          parameters: _i1.testObjectToJson({'customerId': customerId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i6.Customer?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i6.Customer?> updateCustomer(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required _i2.UuidValue customerId,
+    required String name,
+    String? email,
+    String? phone,
+    String? notes,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'customer',
+            method: 'updateCustomer',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'customer',
+          methodName: 'updateCustomer',
+          parameters: _i1.testObjectToJson({
+            'customerId': customerId,
+            'name': name,
+            'email': email,
+            'phone': phone,
+            'notes': notes,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i6.Customer?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<bool> deleteCustomer(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue customerId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'customer',
+            method: 'deleteCustomer',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'customer',
+          methodName: 'deleteCustomer',
+          parameters: _i1.testObjectToJson({'customerId': customerId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<bool>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
 class _GreetingEndpoint {
   _GreetingEndpoint(
     this._endpointDispatch,
@@ -535,7 +728,7 @@ class _GreetingEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i5.Greeting> hello(
+  _i3.Future<_i7.Greeting> hello(
     _i1.TestSessionBuilder sessionBuilder,
     String name,
   ) async {
@@ -558,7 +751,7 @@ class _GreetingEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i5.Greeting>);
+                as _i3.Future<_i7.Greeting>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
