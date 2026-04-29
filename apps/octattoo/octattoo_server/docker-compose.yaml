@@ -1,0 +1,44 @@
+services:
+  # Development services
+  postgres:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "8090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: octattoo
+      POSTGRES_PASSWORD: "Ef7t23pdtMaylGSXPQ5n118NYzAZtyp2"
+    volumes:
+      - octattoo_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:6.2.6
+    ports:
+      - "8091:6379"
+    command: redis-server --requirepass "nywsylXzGMj8NwoMj1fz3m5MTn9tGL-_"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+  # Test services
+  postgres_test:
+    image: pgvector/pgvector:pg16
+    ports:
+      - "9090:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: octattoo_test
+      POSTGRES_PASSWORD: "si8hTY3Y0v16oE7Mu7ft8iFWm66SJkJY"
+    volumes:
+      - octattoo_test_data:/var/lib/postgresql/data
+
+  redis_test:
+    image: redis:6.2.6
+    ports:
+      - "9091:6379"
+    command: redis-server --requirepass "MpU1DT70R7cKdEY9N-l1egm1--2wJfWx"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+volumes:
+  octattoo_data:
+  octattoo_test_data:

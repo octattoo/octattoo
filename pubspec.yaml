@@ -1,0 +1,47 @@
+name: octattoo_workspace
+publish_to: none
+
+environment:
+  sdk: ^3.8.0
+
+workspace:
+  - apps/octattoo/octattoo_client
+  - apps/octattoo/octattoo_server
+  - apps/octattoo/octattoo_flutter
+
+dev_dependencies:
+  melos: ^7.5.1
+
+melos:
+  name: octattoo
+  repository: https://github.com/octattoo/octattoo
+
+  scripts:
+    analyze:
+      run: dart analyze --fatal-infos
+      exec:
+        concurrency: 1
+      packageFilters:
+        dirExists: lib
+
+    test:
+      run: melos run test:dart && melos run test:flutter
+
+    test:dart:
+      run: dart test
+      exec:
+        concurrency: 1
+      packageFilters:
+        dirExists: test
+        flutter: false
+
+    test:flutter:
+      run: flutter test
+      exec:
+        concurrency: 1
+      packageFilters:
+        dirExists: test
+        flutter: true
+
+    format:
+      run: dart format --set-exit-if-changed .
