@@ -1,0 +1,21 @@
+# Dart/Flutter
+.dart_tool/
+.packages
+build/
+pubspec_overrides.yaml
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Serverpod
+.serverpod/
+
+# Generated
+*.g.dart
+*.freezed.dart
