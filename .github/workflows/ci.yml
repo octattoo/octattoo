@@ -16,6 +16,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
+          flutter-version: '3.41.x'
 
       - name: Install Melos
         run: dart pub global activate melos
@@ -26,5 +27,8 @@ jobs:
       - name: Analyze
         run: melos run analyze
 
-      - name: Test
-        run: melos run test
+      - name: Test (Dart)
+        run: melos run test:dart
+
+      - name: Test (Flutter)
+        run: melos run test:flutter

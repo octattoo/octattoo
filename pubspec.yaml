@@ -25,11 +25,23 @@ melos:
         dirExists: lib
 
     test:
+      run: melos run test:dart && melos run test:flutter
+
+    test:dart:
       run: dart test
       exec:
         concurrency: 1
       packageFilters:
         dirExists: test
+        flutter: false
+
+    test:flutter:
+      run: flutter test
+      exec:
+        concurrency: 1
+      packageFilters:
+        dirExists: test
+        flutter: true
 
     format:
       run: dart format --set-exit-if-changed .
