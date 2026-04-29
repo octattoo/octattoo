@@ -4,6 +4,8 @@ import 'package:octattoo_client/octattoo_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 
+import 'src/auth/sign_in_screen.dart';
+
 late final Client client;
 
 void main() async {
@@ -20,7 +22,18 @@ void main() async {
 
 final _router = GoRouter(
   initialLocation: '/appointments',
+  redirect: (context, state) {
+    final isAuthenticated = client.auth.isAuthenticated;
+    final isOnAuth = state.matchedLocation == '/sign-in';
+    if (!isAuthenticated && !isOnAuth) return '/sign-in';
+    if (isAuthenticated && isOnAuth) return '/appointments';
+    return null;
+  },
   routes: [
+    GoRoute(
+      path: '/sign-in',
+      builder: (context, state) => const SignInScreen(),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
           AppShell(navigationShell: navigationShell),

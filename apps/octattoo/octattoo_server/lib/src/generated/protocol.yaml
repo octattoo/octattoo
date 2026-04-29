@@ -1,3 +1,5 @@
+artistProfile:
+  - getMyProfileId:
 emailIdp:
   - login:
   - startRegistration:

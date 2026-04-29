@@ -1,10 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:octattoo_flutter/main.dart';
 
 void main() {
   testWidgets('AppShell shows 4 bottom nav destinations', (tester) async {
-    await tester.pumpWidget(const OctattooApp());
+    final router = GoRouter(
+      initialLocation: '/appointments',
+      routes: [
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, navigationShell) =>
+              AppShell(navigationShell: navigationShell),
+          branches: [
+            StatefulShellBranch(routes: [
+              GoRoute(
+                path: '/appointments',
+                builder: (_, _) =>
+                    const PlaceholderScreen(title: 'Appointments'),
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              GoRoute(
+                path: '/customers',
+                builder: (_, _) =>
+                    const PlaceholderScreen(title: 'Customers'),
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              GoRoute(
+                path: '/projects',
+                builder: (_, _) =>
+                    const PlaceholderScreen(title: 'Projects'),
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              GoRoute(
+                path: '/profile',
+                builder: (_, _) =>
+                    const PlaceholderScreen(title: 'Artist Profile'),
+              ),
+            ]),
+          ],
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
     await tester.pumpAndSettle();
 
     expect(find.text('Appointments'), findsWidgets);
@@ -14,24 +55,65 @@ void main() {
   });
 
   testWidgets('Bottom nav switches tabs', (tester) async {
-    await tester.pumpWidget(const OctattooApp());
+    final router = GoRouter(
+      initialLocation: '/appointments',
+      routes: [
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, navigationShell) =>
+              AppShell(navigationShell: navigationShell),
+          branches: [
+            StatefulShellBranch(routes: [
+              GoRoute(
+                path: '/appointments',
+                builder: (_, _) =>
+                    const PlaceholderScreen(title: 'Appointments'),
+              ),
+            ]),
+            StatefulShellBranch(routes: [
+              GoRoute(
+                path: '/customers',
+                builder: (_, _) =>
+                    const PlaceholderScreen(title: 'Customers'),
+              ),
+            ]),
+          ],
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
     await tester.pumpAndSettle();
 
-    // Initially on Appointments
     expect(find.text('Appointments'), findsWidgets);
 
-    // Tap Customers tab
     await tester.tap(find.text('Customers'));
     await tester.pumpAndSettle();
-    // The Customers placeholder screen should be visible
     expect(find.text('Customers'), findsWidgets);
   });
 
   testWidgets('Drawer opens and shows grouped sections', (tester) async {
-    await tester.pumpWidget(const OctattooApp());
+    final router = GoRouter(
+      initialLocation: '/appointments',
+      routes: [
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, navigationShell) =>
+              AppShell(navigationShell: navigationShell),
+          branches: [
+            StatefulShellBranch(routes: [
+              GoRoute(
+                path: '/appointments',
+                builder: (_, _) =>
+                    const PlaceholderScreen(title: 'Appointments'),
+              ),
+            ]),
+          ],
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
     await tester.pumpAndSettle();
 
-    // Open drawer via scaffold
     final scaffoldState =
         tester.firstState<ScaffoldState>(find.byType(Scaffold));
     scaffoldState.openDrawer();
