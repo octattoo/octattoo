@@ -28,7 +28,15 @@ melos:
       run: melos run test:dart && melos run test:flutter
 
     test:dart:
-      run: dart test
+      run: dart test --exclude-tags integration
+      exec:
+        concurrency: 1
+      packageFilters:
+        dirExists: test
+        flutter: false
+
+    test:integration:
+      run: dart test --tags integration
       exec:
         concurrency: 1
       packageFilters:

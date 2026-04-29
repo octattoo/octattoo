@@ -12,34 +12,41 @@ void main() {
           builder: (context, state, navigationShell) =>
               AppShell(navigationShell: navigationShell),
           branches: [
-            StatefulShellBranch(routes: [
-              GoRoute(
-                path: '/appointments',
-                builder: (_, _) =>
-                    const PlaceholderScreen(title: 'Appointments'),
-              ),
-            ]),
-            StatefulShellBranch(routes: [
-              GoRoute(
-                path: '/customers',
-                builder: (_, _) =>
-                    const PlaceholderScreen(title: 'Customers'),
-              ),
-            ]),
-            StatefulShellBranch(routes: [
-              GoRoute(
-                path: '/projects',
-                builder: (_, _) =>
-                    const PlaceholderScreen(title: 'Projects'),
-              ),
-            ]),
-            StatefulShellBranch(routes: [
-              GoRoute(
-                path: '/profile',
-                builder: (_, _) =>
-                    const PlaceholderScreen(title: 'Artist Profile'),
-              ),
-            ]),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: '/appointments',
+                  builder: (_, _) =>
+                      const PlaceholderScreen(title: 'Appointments'),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: '/customers',
+                  builder: (_, _) =>
+                      const PlaceholderScreen(title: 'Customers'),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: '/projects',
+                  builder: (_, _) => const PlaceholderScreen(title: 'Projects'),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: '/profile',
+                  builder: (_, _) =>
+                      const PlaceholderScreen(title: 'Artist Profile'),
+                ),
+              ],
+            ),
           ],
         ),
       ],
@@ -62,20 +69,24 @@ void main() {
           builder: (context, state, navigationShell) =>
               AppShell(navigationShell: navigationShell),
           branches: [
-            StatefulShellBranch(routes: [
-              GoRoute(
-                path: '/appointments',
-                builder: (_, _) =>
-                    const PlaceholderScreen(title: 'Appointments'),
-              ),
-            ]),
-            StatefulShellBranch(routes: [
-              GoRoute(
-                path: '/customers',
-                builder: (_, _) =>
-                    const PlaceholderScreen(title: 'Customers'),
-              ),
-            ]),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: '/appointments',
+                  builder: (_, _) =>
+                      const PlaceholderScreen(title: 'Appointments'),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: '/customers',
+                  builder: (_, _) =>
+                      const PlaceholderScreen(title: 'Customers'),
+                ),
+              ],
+            ),
           ],
         ),
       ],
@@ -99,13 +110,15 @@ void main() {
           builder: (context, state, navigationShell) =>
               AppShell(navigationShell: navigationShell),
           branches: [
-            StatefulShellBranch(routes: [
-              GoRoute(
-                path: '/appointments',
-                builder: (_, _) =>
-                    const PlaceholderScreen(title: 'Appointments'),
-              ),
-            ]),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: '/appointments',
+                  builder: (_, _) =>
+                      const PlaceholderScreen(title: 'Appointments'),
+                ),
+              ],
+            ),
           ],
         ),
       ],
@@ -114,8 +127,9 @@ void main() {
     await tester.pumpWidget(MaterialApp.router(routerConfig: router));
     await tester.pumpAndSettle();
 
-    final scaffoldState =
-        tester.firstState<ScaffoldState>(find.byType(Scaffold));
+    final scaffoldState = tester.firstState<ScaffoldState>(
+      find.byType(Scaffold),
+    );
     scaffoldState.openDrawer();
     await tester.pumpAndSettle();
 

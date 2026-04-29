@@ -17,8 +17,9 @@ void main() {
         ),
       );
 
-      final profileId =
-          await endpoints.artistProfile.getMyProfileId(authenticatedSession);
+      final profileId = await endpoints.artistProfile.getMyProfileId(
+        authenticatedSession,
+      );
       expect(profileId, isA<UuidValue>());
     });
 
@@ -34,10 +35,12 @@ void main() {
         ),
       );
 
-      final first =
-          await endpoints.artistProfile.getMyProfileId(authenticatedSession);
-      final second =
-          await endpoints.artistProfile.getMyProfileId(authenticatedSession);
+      final first = await endpoints.artistProfile.getMyProfileId(
+        authenticatedSession,
+      );
+      final second = await endpoints.artistProfile.getMyProfileId(
+        authenticatedSession,
+      );
       expect(first, equals(second));
     });
 

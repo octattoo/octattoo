@@ -38,34 +38,42 @@ final _router = GoRouter(
       builder: (context, state, navigationShell) =>
           AppShell(navigationShell: navigationShell),
       branches: [
-        StatefulShellBranch(routes: [
-          GoRoute(
-            path: '/appointments',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Appointments'),
-          ),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(
-            path: '/customers',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Customers'),
-          ),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(
-            path: '/projects',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Projects'),
-          ),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(
-            path: '/profile',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Artist Profile'),
-          ),
-        ]),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/appointments',
+              builder: (context, state) =>
+                  const PlaceholderScreen(title: 'Appointments'),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/customers',
+              builder: (context, state) =>
+                  const PlaceholderScreen(title: 'Customers'),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/projects',
+              builder: (context, state) =>
+                  const PlaceholderScreen(title: 'Projects'),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/profile',
+              builder: (context, state) =>
+                  const PlaceholderScreen(title: 'Artist Profile'),
+            ),
+          ],
+        ),
       ],
     ),
   ],
@@ -105,8 +113,10 @@ class AppShell extends StatelessWidget {
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) =>
-            navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex),
+        onDestinationSelected: (index) => navigationShell.goBranch(
+          index,
+          initialLocation: index == navigationShell.currentIndex,
+        ),
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.calendar_today_outlined),
@@ -206,8 +216,8 @@ class _DrawerSectionHeader extends StatelessWidget {
       child: Text(
         title,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }
