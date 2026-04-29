@@ -11,3 +11,7 @@ Default label vocabulary (needs-triage, needs-info, ready-for-agent, ready-for-h
 ### Domain docs
 
 Multi-context layout — `CONTEXT-MAP.md` at root points to per-context `CONTEXT.md` files. See `docs/agents/domain.md`.
+
+### Domain language
+
+Use terms from the relevant `CONTEXT.md` glossary in code (class names, variables, comments). See `CONTEXT-MAP.md` for the context map.
