@@ -5,6 +5,7 @@ import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 
 import 'src/auth/sign_in_screen.dart';
+import 'src/customer/customer_list_screen.dart';
 
 late final Client client;
 
@@ -51,8 +52,7 @@ final _router = GoRouter(
           routes: [
             GoRoute(
               path: '/customers',
-              builder: (context, state) =>
-                  const PlaceholderScreen(title: 'Customers'),
+              builder: (context, state) => const CustomerListScreen(),
             ),
           ],
         ),

@@ -1,0 +1,9 @@
+### Result of creating a customer, includes potential duplicates.
+class: CreateCustomerResult
+serverOnly: false
+
+fields:
+  ### The newly created customer.
+  customer: Customer
+  ### Potential duplicate customers (non-blocking).
+  potentialDuplicates: List<Customer>
