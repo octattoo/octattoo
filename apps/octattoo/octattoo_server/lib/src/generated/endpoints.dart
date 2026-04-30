@@ -1228,6 +1228,58 @@ class Endpoints extends _i1.EndpointDispatch {
                         params['appointmentId'],
                       ),
         ),
+        'getVersionHistory': _i1.MethodConnector(
+          name: 'getVersionHistory',
+          params: {
+            'appointmentId': _i1.ParameterDescription(
+              name: 'appointmentId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['sessionRecord'] as _i12.SessionRecordEndpoint)
+                      .getVersionHistory(
+                        session,
+                        params['appointmentId'],
+                      ),
+        ),
+        'amendSessionRecord': _i1.MethodConnector(
+          name: 'amendSessionRecord',
+          params: {
+            'appointmentId': _i1.ParameterDescription(
+              name: 'appointmentId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'materialIds': _i1.ParameterDescription(
+              name: 'materialIds',
+              type: _i1.getType<List<_i1.UuidValue>>(),
+              nullable: false,
+            ),
+            'reason': _i1.ParameterDescription(
+              name: 'reason',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['sessionRecord'] as _i12.SessionRecordEndpoint)
+                      .amendSessionRecord(
+                        session,
+                        params['appointmentId'],
+                        params['materialIds'],
+                        params['reason'],
+                      ),
+        ),
       },
     );
     modules['serverpod_auth_idp'] = _i17.Endpoints()

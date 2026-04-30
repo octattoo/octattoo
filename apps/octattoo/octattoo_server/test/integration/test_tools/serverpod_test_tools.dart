@@ -1883,4 +1883,72 @@ class _SessionRecordEndpoint {
       }
     });
   }
+
+  _i3.Future<List<_i18.SessionRecord>> getVersionHistory(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue appointmentId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'sessionRecord',
+            method: 'getVersionHistory',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'sessionRecord',
+          methodName: 'getVersionHistory',
+          parameters: _i1.testObjectToJson({'appointmentId': appointmentId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i18.SessionRecord>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i18.SessionRecord> amendSessionRecord(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue appointmentId,
+    List<_i2.UuidValue> materialIds,
+    String reason,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'sessionRecord',
+            method: 'amendSessionRecord',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'sessionRecord',
+          methodName: 'amendSessionRecord',
+          parameters: _i1.testObjectToJson({
+            'appointmentId': appointmentId,
+            'materialIds': materialIds,
+            'reason': reason,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i18.SessionRecord>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }

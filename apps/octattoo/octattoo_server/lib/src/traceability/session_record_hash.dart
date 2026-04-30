@@ -6,6 +6,7 @@ import 'package:serverpod/serverpod.dart' show UuidValue;
 import '../generated/protocol.dart';
 
 /// Computes a deterministic SHA-256 hash over canonical traceability fields.
+/// For amendments (v2+), [previousHash] links this version to the prior one.
 String computeSessionRecordHash({
   required UuidValue appointmentId,
   required UuidValue artistProfileId,
@@ -13,6 +14,7 @@ String computeSessionRecordHash({
   required DateTime finalizedAt,
   required AppointmentType type,
   required List<AppointmentMaterial> materials,
+  String? previousHash,
 }) {
   final sortedMaterials = List<AppointmentMaterial>.from(materials)
     ..sort((a, b) {
@@ -36,6 +38,7 @@ String computeSessionRecordHash({
           },
         )
         .toList(),
+    'previousHash': ?previousHash,
   });
 
   return sha256.convert(utf8.encode(canonical)).toString();

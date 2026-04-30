@@ -132,5 +132,28 @@ void main() {
       expect(hash, hasLength(64));
       expect(hash, matches(RegExp(r'^[0-9a-f]{64}$')));
     });
+
+    test('previousHash changes the output (hash chain linking)', () {
+      final hashWithout = computeSessionRecordHash(
+        appointmentId: appointmentId,
+        artistProfileId: artistProfileId,
+        customerId: customerId,
+        finalizedAt: finalizedAt,
+        type: AppointmentType.tattoo,
+        materials: materials,
+      );
+
+      final hashWith = computeSessionRecordHash(
+        appointmentId: appointmentId,
+        artistProfileId: artistProfileId,
+        customerId: customerId,
+        finalizedAt: finalizedAt,
+        type: AppointmentType.tattoo,
+        materials: materials,
+        previousHash: 'abc123',
+      );
+
+      expect(hashWithout, isNot(equals(hashWith)));
+    });
   });
 }

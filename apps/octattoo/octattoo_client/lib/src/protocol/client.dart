@@ -743,13 +743,37 @@ class EndpointSessionRecord extends _i1.EndpointRef {
   @override
   String get name => 'sessionRecord';
 
-  /// Returns the SessionRecord for a given appointment, or null if not sealed.
+  /// Returns the latest SessionRecord for a given appointment, or null if not sealed.
   _i2.Future<_i18.SessionRecord?> getByAppointmentId(
     _i1.UuidValue appointmentId,
   ) => caller.callServerEndpoint<_i18.SessionRecord?>(
     'sessionRecord',
     'getByAppointmentId',
     {'appointmentId': appointmentId},
+  );
+
+  /// Returns all versions of a SessionRecord for an appointment, ordered by version ascending.
+  _i2.Future<List<_i18.SessionRecord>> getVersionHistory(
+    _i1.UuidValue appointmentId,
+  ) => caller.callServerEndpoint<List<_i18.SessionRecord>>(
+    'sessionRecord',
+    'getVersionHistory',
+    {'appointmentId': appointmentId},
+  );
+
+  /// Creates a new version of the SessionRecord with updated materials.
+  _i2.Future<_i18.SessionRecord> amendSessionRecord(
+    _i1.UuidValue appointmentId,
+    List<_i1.UuidValue> materialIds,
+    String reason,
+  ) => caller.callServerEndpoint<_i18.SessionRecord>(
+    'sessionRecord',
+    'amendSessionRecord',
+    {
+      'appointmentId': appointmentId,
+      'materialIds': materialIds,
+      'reason': reason,
+    },
   );
 }
 

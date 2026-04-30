@@ -39,6 +39,8 @@ import 'package:octattoo_server/src/generated/artist_profile/artist_profile.dart
     as _i23;
 import 'package:octattoo_server/src/generated/customer/customer.dart' as _i24;
 import 'package:octattoo_server/src/generated/inventory/material.dart' as _i25;
+import 'package:octattoo_server/src/generated/traceability/session_record.dart'
+    as _i26;
 export 'appointment/appointment.dart';
 export 'appointment/appointment_material.dart';
 export 'appointment/appointment_status.dart';
@@ -792,6 +794,12 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: true,
           dartType: 'String?',
         ),
+        _i2.ColumnDefinition(
+          name: 'reason',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
       ],
       foreignKeys: [],
       indexes: [
@@ -809,12 +817,16 @@ class Protocol extends _i1.SerializationManagerServer {
           isPrimary: true,
         ),
         _i2.IndexDefinition(
-          indexName: 'session_record_appointment_id_idx',
+          indexName: 'session_record_appointment_version_idx',
           tableSpace: null,
           elements: [
             _i2.IndexElementDefinition(
               type: _i2.IndexElementDefinitionType.column,
               definition: 'appointmentId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'version',
             ),
           ],
           type: 'btree',
@@ -1080,6 +1092,16 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (t == List<_i25.Material>) {
       return (data as List).map((e) => deserialize<_i25.Material>(e)).toList()
+          as T;
+    }
+    if (t == List<_i26.SessionRecord>) {
+      return (data as List)
+              .map((e) => deserialize<_i26.SessionRecord>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i1.UuidValue>) {
+      return (data as List).map((e) => deserialize<_i1.UuidValue>(e)).toList()
           as T;
     }
     try {
