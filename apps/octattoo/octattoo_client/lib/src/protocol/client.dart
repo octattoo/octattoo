@@ -18,26 +18,28 @@ import 'package:octattoo_client/src/protocol/appointment/appointment_type.dart'
     as _i4;
 import 'package:octattoo_client/src/protocol/appointment/appointment_material.dart'
     as _i5;
-import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+import 'package:octattoo_client/src/protocol/artist_profile/artist_profile.dart'
     as _i6;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
     as _i7;
-import 'package:octattoo_client/src/protocol/customer/create_customer_result.dart'
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i8;
-import 'package:octattoo_client/src/protocol/customer/customer.dart' as _i9;
-import 'package:octattoo_client/src/protocol/greetings/greeting.dart' as _i10;
-import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i11;
+import 'package:octattoo_client/src/protocol/customer/create_customer_result.dart'
+    as _i9;
+import 'package:octattoo_client/src/protocol/customer/customer.dart' as _i10;
+import 'package:octattoo_client/src/protocol/greetings/greeting.dart' as _i11;
+import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i12;
 import 'package:octattoo_client/src/protocol/inventory/material_type.dart'
-    as _i12;
-import 'package:octattoo_client/src/protocol/secure_link/secure_link.dart'
     as _i13;
-import 'package:octattoo_client/src/protocol/secure_link/secure_link_type.dart'
+import 'package:octattoo_client/src/protocol/secure_link/secure_link.dart'
     as _i14;
-import 'package:octattoo_client/src/protocol/storage/stored_file.dart' as _i15;
-import 'dart:typed_data' as _i16;
+import 'package:octattoo_client/src/protocol/secure_link/secure_link_type.dart'
+    as _i15;
+import 'package:octattoo_client/src/protocol/storage/stored_file.dart' as _i16;
+import 'dart:typed_data' as _i17;
 import 'package:octattoo_client/src/protocol/traceability/session_record.dart'
-    as _i17;
-import 'protocol.dart' as _i18;
+    as _i18;
+import 'protocol.dart' as _i19;
 
 /// {@category Endpoint}
 class EndpointAppointment extends _i1.EndpointRef {
@@ -115,13 +117,54 @@ class EndpointArtistProfile extends _i1.EndpointRef {
   @override
   String get name => 'artistProfile';
 
-  /// Returns the current user's artist profile ID.
-  /// Auto-creates the profile on first call.
-  _i2.Future<_i1.UuidValue> getMyProfileId() =>
-      caller.callServerEndpoint<_i1.UuidValue>(
+  /// Creates a new Artist Profile for the authenticated account.
+  _i2.Future<_i6.ArtistProfile> createProfile(
+    String name,
+    String handle,
+  ) => caller.callServerEndpoint<_i6.ArtistProfile>(
+    'artistProfile',
+    'createProfile',
+    {
+      'name': name,
+      'handle': handle,
+    },
+  );
+
+  /// Checks if a handle is available.
+  _i2.Future<bool> isHandleAvailable(String handle) =>
+      caller.callServerEndpoint<bool>(
         'artistProfile',
-        'getMyProfileId',
+        'isHandleAvailable',
+        {'handle': handle},
+      );
+
+  /// Returns all profiles for the authenticated account.
+  _i2.Future<List<_i6.ArtistProfile>> listMyProfiles() =>
+      caller.callServerEndpoint<List<_i6.ArtistProfile>>(
+        'artistProfile',
+        'listMyProfiles',
         {},
+      );
+
+  /// Updates the handle for a profile owned by the authenticated account.
+  _i2.Future<_i6.ArtistProfile> updateHandle(
+    _i1.UuidValue profileId,
+    String newHandle,
+  ) => caller.callServerEndpoint<_i6.ArtistProfile>(
+    'artistProfile',
+    'updateHandle',
+    {
+      'profileId': profileId,
+      'newHandle': newHandle,
+    },
+  );
+
+  /// Suggests an available handle based on a display name.
+  _i2.Future<String> suggestHandle(String name) =>
+      caller.callServerEndpoint<String>(
+        'artistProfile',
+        'suggestHandle',
+        {'name': name},
       );
 }
 
@@ -129,7 +172,7 @@ class EndpointArtistProfile extends _i1.EndpointRef {
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 /// {@category Endpoint}
-class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
+class EndpointEmailIdp extends _i7.EndpointEmailIdpBase {
   EndpointEmailIdp(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -145,10 +188,10 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i2.Future<_i7.AuthSuccess> login({
+  _i2.Future<_i8.AuthSuccess> login({
     required String email,
     required String password,
-  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i8.AuthSuccess>(
     'emailIdp',
     'login',
     {
@@ -213,10 +256,10 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
   ///
   /// Returns a session for the newly created user.
   @override
-  _i2.Future<_i7.AuthSuccess> finishRegistration({
+  _i2.Future<_i8.AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
-  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i8.AuthSuccess>(
     'emailIdp',
     'finishRegistration',
     {
@@ -308,10 +351,42 @@ class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
   );
 }
 
+/// {@category Endpoint}
+class EndpointGoogleIdp extends _i7.EndpointGoogleIdpBase {
+  EndpointGoogleIdp(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'googleIdp';
+
+  /// Validates a Google ID token and either logs in the associated user or
+  /// creates a new user account if the Google account ID is not yet known.
+  ///
+  /// If a new user is created an associated [UserProfile] is also created.
+  @override
+  _i2.Future<_i8.AuthSuccess> login({
+    required String idToken,
+    required String? accessToken,
+  }) => caller.callServerEndpoint<_i8.AuthSuccess>(
+    'googleIdp',
+    'login',
+    {
+      'idToken': idToken,
+      'accessToken': accessToken,
+    },
+  );
+
+  @override
+  _i2.Future<bool> hasAccount() => caller.callServerEndpoint<bool>(
+    'googleIdp',
+    'hasAccount',
+    {},
+  );
+}
+
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
 /// is made available on the server and enables automatic token refresh on the client.
 /// {@category Endpoint}
-class EndpointJwtRefresh extends _i7.EndpointRefreshJwtTokens {
+class EndpointJwtRefresh extends _i8.EndpointRefreshJwtTokens {
   EndpointJwtRefresh(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -336,9 +411,9 @@ class EndpointJwtRefresh extends _i7.EndpointRefreshJwtTokens {
   /// This endpoint is unauthenticated, meaning the client won't include any
   /// authentication information with the call.
   @override
-  _i2.Future<_i7.AuthSuccess> refreshAccessToken({
+  _i2.Future<_i8.AuthSuccess> refreshAccessToken({
     required String refreshToken,
-  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i8.AuthSuccess>(
     'jwtRefresh',
     'refreshAccessToken',
     {'refreshToken': refreshToken},
@@ -354,12 +429,12 @@ class EndpointCustomer extends _i1.EndpointRef {
   String get name => 'customer';
 
   /// Creates a customer, returning potential duplicates.
-  _i2.Future<_i8.CreateCustomerResult> createCustomer({
+  _i2.Future<_i9.CreateCustomerResult> createCustomer({
     required String name,
     String? email,
     String? phone,
     String? notes,
-  }) => caller.callServerEndpoint<_i8.CreateCustomerResult>(
+  }) => caller.callServerEndpoint<_i9.CreateCustomerResult>(
     'customer',
     'createCustomer',
     {
@@ -371,29 +446,29 @@ class EndpointCustomer extends _i1.EndpointRef {
   );
 
   /// Lists customers for the current artist profile.
-  _i2.Future<List<_i9.Customer>> listCustomers({String? search}) =>
-      caller.callServerEndpoint<List<_i9.Customer>>(
+  _i2.Future<List<_i10.Customer>> listCustomers({String? search}) =>
+      caller.callServerEndpoint<List<_i10.Customer>>(
         'customer',
         'listCustomers',
         {'search': search},
       );
 
   /// Gets a single customer by ID (scoped to artist profile).
-  _i2.Future<_i9.Customer?> getCustomer(_i1.UuidValue customerId) =>
-      caller.callServerEndpoint<_i9.Customer?>(
+  _i2.Future<_i10.Customer?> getCustomer(_i1.UuidValue customerId) =>
+      caller.callServerEndpoint<_i10.Customer?>(
         'customer',
         'getCustomer',
         {'customerId': customerId},
       );
 
   /// Updates a customer (scoped to artist profile).
-  _i2.Future<_i9.Customer?> updateCustomer({
+  _i2.Future<_i10.Customer?> updateCustomer({
     required _i1.UuidValue customerId,
     required String name,
     String? email,
     String? phone,
     String? notes,
-  }) => caller.callServerEndpoint<_i9.Customer?>(
+  }) => caller.callServerEndpoint<_i10.Customer?>(
     'customer',
     'updateCustomer',
     {
@@ -424,8 +499,8 @@ class EndpointGreeting extends _i1.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i2.Future<_i10.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i10.Greeting>(
+  _i2.Future<_i11.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i11.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -440,15 +515,15 @@ class EndpointMaterial extends _i1.EndpointRef {
   String get name => 'material';
 
   /// Creates a material in the artist's personal inventory.
-  _i2.Future<_i11.Material> createMaterial({
-    required _i12.MaterialType type,
+  _i2.Future<_i12.Material> createMaterial({
+    required _i13.MaterialType type,
     required String manufacturer,
     required String supplier,
     required String productName,
     required String batchNumber,
     required DateTime expirationDate,
     int? quantity,
-  }) => caller.callServerEndpoint<_i11.Material>(
+  }) => caller.callServerEndpoint<_i12.Material>(
     'material',
     'createMaterial',
     {
@@ -463,10 +538,10 @@ class EndpointMaterial extends _i1.EndpointRef {
   );
 
   /// Lists materials for the current artist profile.
-  _i2.Future<List<_i11.Material>> listMaterials({
-    _i12.MaterialType? type,
+  _i2.Future<List<_i12.Material>> listMaterials({
+    _i13.MaterialType? type,
     String? search,
-  }) => caller.callServerEndpoint<List<_i11.Material>>(
+  }) => caller.callServerEndpoint<List<_i12.Material>>(
     'material',
     'listMaterials',
     {
@@ -476,22 +551,22 @@ class EndpointMaterial extends _i1.EndpointRef {
   );
 
   /// Gets a single material by ID (scoped to artist profile).
-  _i2.Future<_i11.Material?> getMaterial(_i1.UuidValue materialId) =>
-      caller.callServerEndpoint<_i11.Material?>(
+  _i2.Future<_i12.Material?> getMaterial(_i1.UuidValue materialId) =>
+      caller.callServerEndpoint<_i12.Material?>(
         'material',
         'getMaterial',
         {'materialId': materialId},
       );
 
   /// Updates a material (scoped to artist profile).
-  _i2.Future<_i11.Material?> updateMaterial({
+  _i2.Future<_i12.Material?> updateMaterial({
     required _i1.UuidValue materialId,
     required String manufacturer,
     required String supplier,
     required String productName,
     required String batchNumber,
     required DateTime expirationDate,
-  }) => caller.callServerEndpoint<_i11.Material?>(
+  }) => caller.callServerEndpoint<_i12.Material?>(
     'material',
     'updateMaterial',
     {
@@ -513,18 +588,18 @@ class EndpointMaterial extends _i1.EndpointRef {
       );
 
   /// Toggles ink status between inStock and empty.
-  _i2.Future<_i11.Material?> toggleInkStatus(_i1.UuidValue materialId) =>
-      caller.callServerEndpoint<_i11.Material?>(
+  _i2.Future<_i12.Material?> toggleInkStatus(_i1.UuidValue materialId) =>
+      caller.callServerEndpoint<_i12.Material?>(
         'material',
         'toggleInkStatus',
         {'materialId': materialId},
       );
 
   /// Sets needle quantity. Auto-marks empty when quantity reaches 0.
-  _i2.Future<_i11.Material?> setNeedleQuantity({
+  _i2.Future<_i12.Material?> setNeedleQuantity({
     required _i1.UuidValue materialId,
     required int quantity,
-  }) => caller.callServerEndpoint<_i11.Material?>(
+  }) => caller.callServerEndpoint<_i12.Material?>(
     'material',
     'setNeedleQuantity',
     {
@@ -534,8 +609,8 @@ class EndpointMaterial extends _i1.EndpointRef {
   );
 
   /// Lists materials nearing expiration for the current artist profile.
-  _i2.Future<List<_i11.Material>> listExpiringMaterials() =>
-      caller.callServerEndpoint<List<_i11.Material>>(
+  _i2.Future<List<_i12.Material>> listExpiringMaterials() =>
+      caller.callServerEndpoint<List<_i12.Material>>(
         'material',
         'listExpiringMaterials',
         {},
@@ -550,11 +625,11 @@ class EndpointSecureLink extends _i1.EndpointRef {
   String get name => 'secureLink';
 
   /// Creates a new secure link with a unique token.
-  _i2.Future<_i13.SecureLink> createLink({
-    required _i14.SecureLinkType type,
+  _i2.Future<_i14.SecureLink> createLink({
+    required _i15.SecureLinkType type,
     required _i1.UuidValue targetId,
     int? expiresInDays,
-  }) => caller.callServerEndpoint<_i13.SecureLink>(
+  }) => caller.callServerEndpoint<_i14.SecureLink>(
     'secureLink',
     'createLink',
     {
@@ -565,16 +640,16 @@ class EndpointSecureLink extends _i1.EndpointRef {
   );
 
   /// Resolves a token to its link data. Returns null if not found or expired.
-  _i2.Future<_i13.SecureLink?> resolveLink(String token) =>
-      caller.callServerEndpoint<_i13.SecureLink?>(
+  _i2.Future<_i14.SecureLink?> resolveLink(String token) =>
+      caller.callServerEndpoint<_i14.SecureLink?>(
         'secureLink',
         'resolveLink',
         {'token': token},
       );
 
   /// Renews an expired link, extending its expiration by the type default.
-  _i2.Future<_i13.SecureLink?> renewLink(_i1.UuidValue linkId) =>
-      caller.callServerEndpoint<_i13.SecureLink?>(
+  _i2.Future<_i14.SecureLink?> renewLink(_i1.UuidValue linkId) =>
+      caller.callServerEndpoint<_i14.SecureLink?>(
         'secureLink',
         'renewLink',
         {'linkId': linkId},
@@ -589,11 +664,11 @@ class EndpointStorage extends _i1.EndpointRef {
   String get name => 'storage';
 
   /// Uploads a file and returns the stored file metadata.
-  _i2.Future<_i15.StoredFile> uploadFile({
+  _i2.Future<_i16.StoredFile> uploadFile({
     required String fileName,
     required String mimeType,
-    required _i16.ByteData bytes,
-  }) => caller.callServerEndpoint<_i15.StoredFile>(
+    required _i17.ByteData bytes,
+  }) => caller.callServerEndpoint<_i16.StoredFile>(
     'storage',
     'uploadFile',
     {
@@ -604,8 +679,8 @@ class EndpointStorage extends _i1.EndpointRef {
   );
 
   /// Retrieves file metadata by ID (scoped to artist profile).
-  _i2.Future<_i15.StoredFile?> getFile(_i1.UuidValue fileId) =>
-      caller.callServerEndpoint<_i15.StoredFile?>(
+  _i2.Future<_i16.StoredFile?> getFile(_i1.UuidValue fileId) =>
+      caller.callServerEndpoint<_i16.StoredFile?>(
         'storage',
         'getFile',
         {'fileId': fileId},
@@ -656,9 +731,9 @@ class EndpointSessionRecord extends _i1.EndpointRef {
   String get name => 'sessionRecord';
 
   /// Returns the SessionRecord for a given appointment, or null if not sealed.
-  _i2.Future<_i17.SessionRecord?> getByAppointmentId(
+  _i2.Future<_i18.SessionRecord?> getByAppointmentId(
     _i1.UuidValue appointmentId,
-  ) => caller.callServerEndpoint<_i17.SessionRecord?>(
+  ) => caller.callServerEndpoint<_i18.SessionRecord?>(
     'sessionRecord',
     'getByAppointmentId',
     {'appointmentId': appointmentId},
@@ -667,13 +742,13 @@ class EndpointSessionRecord extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    serverpod_auth_idp = _i6.Caller(client);
-    serverpod_auth_core = _i7.Caller(client);
+    serverpod_auth_idp = _i7.Caller(client);
+    serverpod_auth_core = _i8.Caller(client);
   }
 
-  late final _i6.Caller serverpod_auth_idp;
+  late final _i7.Caller serverpod_auth_idp;
 
-  late final _i7.Caller serverpod_auth_core;
+  late final _i8.Caller serverpod_auth_core;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -696,7 +771,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i18.Protocol(),
+         _i19.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -708,6 +783,7 @@ class Client extends _i1.ServerpodClientShared {
     appointment = EndpointAppointment(this);
     artistProfile = EndpointArtistProfile(this);
     emailIdp = EndpointEmailIdp(this);
+    googleIdp = EndpointGoogleIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
     customer = EndpointCustomer(this);
     greeting = EndpointGreeting(this);
@@ -723,6 +799,8 @@ class Client extends _i1.ServerpodClientShared {
   late final EndpointArtistProfile artistProfile;
 
   late final EndpointEmailIdp emailIdp;
+
+  late final EndpointGoogleIdp googleIdp;
 
   late final EndpointJwtRefresh jwtRefresh;
 
@@ -745,6 +823,7 @@ class Client extends _i1.ServerpodClientShared {
     'appointment': appointment,
     'artistProfile': artistProfile,
     'emailIdp': emailIdp,
+    'googleIdp': googleIdp,
     'jwtRefresh': jwtRefresh,
     'customer': customer,
     'greeting': greeting,

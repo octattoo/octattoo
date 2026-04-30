@@ -1,4 +1,4 @@
-### An artist's brand identity, auto-created on account registration.
+### An artist's brand identity. One Account can have many Artist Profiles.
 class: ArtistProfile
 table: artist_profile
 
@@ -8,12 +8,17 @@ fields:
   authUserId: UuidValue
   ### Display name for the artist.
   name: String
+  ### Unique URL slug for the profile.
+  handle: String
   ### Days before expiration to trigger alerts (default 30).
   expirationAlertDays: int, default=30
   ### Storage quota in bytes (default 500MB free tier).
   storageQuotaBytes: int, default=524288000
 
 indexes:
-  artist_profile_auth_user_id_unique:
+  artist_profile_auth_user_id_idx:
     fields: authUserId
+    unique: false
+  artist_profile_handle_unique:
+    fields: handle
     unique: true

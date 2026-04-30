@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/get_started_prompt.dart';
 import 'inventory_list_viewmodel.dart';
 
 class InventoryListScreen extends StatefulWidget {
@@ -76,7 +77,12 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
               child: _viewModel.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : _viewModel.filteredMaterials.isEmpty
-                      ? const Center(child: Text('No materials found'))
+                      ? const GetStartedPrompt(
+                          title: 'No materials yet',
+                          description: 'Add inks and needles to track batches, expiration dates, and traceability.',
+                          icon: Icons.inventory_2,
+                          isEmpty: true,
+                        )
                       : ListView.builder(
                           itemCount: _viewModel.filteredMaterials.length,
                           itemBuilder: (context, index) {

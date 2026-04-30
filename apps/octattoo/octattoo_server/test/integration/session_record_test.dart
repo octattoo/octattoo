@@ -19,7 +19,8 @@ void main() {
     });
 
     Future<UuidValue> setupProfile() async {
-      return endpoints.artistProfile.getMyProfileId(session);
+      final p = await endpoints.artistProfile.createProfile(session, 'Artist', 'artist_sr');
+      return p.id!;
     }
 
     Future<UuidValue> createCustomer() async {

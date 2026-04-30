@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/get_started_prompt.dart';
 import 'appointment_detail_viewmodel.dart';
 
 class AppointmentListScreen extends StatefulWidget {
@@ -20,7 +21,12 @@ class _AppointmentListScreenState extends State<AppointmentListScreen> {
     }
 
     if (_appointments.isEmpty) {
-      return const Center(child: Text('No appointments yet'));
+      return const GetStartedPrompt(
+        title: 'No appointments yet',
+        description: 'Create your first appointment to start tracking sessions and materials.',
+        icon: Icons.calendar_today,
+        isEmpty: true,
+      );
     }
 
     return ListView.builder(

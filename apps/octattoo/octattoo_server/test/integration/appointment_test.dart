@@ -28,7 +28,8 @@ void main() {
     });
 
     Future<UuidValue> setupProfile(TestSessionBuilder s) async {
-      return endpoints.artistProfile.getMyProfileId(s);
+      final p = await endpoints.artistProfile.createProfile(s, 'Artist', 'artist_${s.hashCode}');
+      return p.id!;
     }
 
     Future<UuidValue> createCustomer(TestSessionBuilder s) async {

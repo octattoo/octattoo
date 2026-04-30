@@ -35,8 +35,10 @@ import 'storage/stored_file.dart' as _i20;
 import 'traceability/session_record.dart' as _i21;
 import 'package:octattoo_server/src/generated/appointment/appointment.dart'
     as _i22;
-import 'package:octattoo_server/src/generated/customer/customer.dart' as _i23;
-import 'package:octattoo_server/src/generated/inventory/material.dart' as _i24;
+import 'package:octattoo_server/src/generated/artist_profile/artist_profile.dart'
+    as _i23;
+import 'package:octattoo_server/src/generated/customer/customer.dart' as _i24;
+import 'package:octattoo_server/src/generated/inventory/material.dart' as _i25;
 export 'appointment/appointment.dart';
 export 'appointment/appointment_material.dart';
 export 'appointment/appointment_status.dart';
@@ -320,6 +322,12 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'String',
         ),
         _i2.ColumnDefinition(
+          name: 'handle',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
           name: 'expirationAlertDays',
           columnType: _i2.ColumnType.bigint,
           isNullable: false,
@@ -350,12 +358,25 @@ class Protocol extends _i1.SerializationManagerServer {
           isPrimary: true,
         ),
         _i2.IndexDefinition(
-          indexName: 'artist_profile_auth_user_id_unique',
+          indexName: 'artist_profile_auth_user_id_idx',
           tableSpace: null,
           elements: [
             _i2.IndexElementDefinition(
               type: _i2.IndexElementDefinitionType.column,
               definition: 'authUserId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'artist_profile_handle_unique',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'handle',
             ),
           ],
           type: 'btree',
@@ -1029,12 +1050,18 @@ class Protocol extends _i1.SerializationManagerServer {
               .toList()
           as T;
     }
-    if (t == List<_i23.Customer>) {
-      return (data as List).map((e) => deserialize<_i23.Customer>(e)).toList()
+    if (t == List<_i23.ArtistProfile>) {
+      return (data as List)
+              .map((e) => deserialize<_i23.ArtistProfile>(e))
+              .toList()
           as T;
     }
-    if (t == List<_i24.Material>) {
-      return (data as List).map((e) => deserialize<_i24.Material>(e)).toList()
+    if (t == List<_i24.Customer>) {
+      return (data as List).map((e) => deserialize<_i24.Customer>(e)).toList()
+          as T;
+    }
+    if (t == List<_i25.Material>) {
+      return (data as List).map((e) => deserialize<_i25.Material>(e)).toList()
           as T;
     }
     try {
