@@ -582,6 +582,41 @@ class _ArtistProfileEndpoint {
       }
     });
   }
+
+  _i3.Future<_i7.ArtistProfile> updateSeedColor(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue profileId,
+    int? seedColor,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'artistProfile',
+            method: 'updateSeedColor',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'artistProfile',
+          methodName: 'updateSeedColor',
+          parameters: _i1.testObjectToJson({
+            'profileId': profileId,
+            'seedColor': seedColor,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i7.ArtistProfile>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
 }
 
 class _EmailIdpEndpoint {

@@ -10,6 +10,7 @@ resolution: workspace
 
 dependencies:
   crypto: ^3.0.7
+  material_color_utilities: ^0.13.0
   serverpod: 3.4.7
   serverpod_auth_idp_server: 3.4.7
 

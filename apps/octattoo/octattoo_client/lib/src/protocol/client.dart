@@ -166,6 +166,19 @@ class EndpointArtistProfile extends _i1.EndpointRef {
         'suggestHandle',
         {'name': name},
       );
+
+  /// Updates the seed color for a profile and regenerates the CSS palette.
+  _i2.Future<_i6.ArtistProfile> updateSeedColor(
+    _i1.UuidValue profileId,
+    int? seedColor,
+  ) => caller.callServerEndpoint<_i6.ArtistProfile>(
+    'artistProfile',
+    'updateSeedColor',
+    {
+      'profileId': profileId,
+      'seedColor': seedColor,
+    },
+  );
 }
 
 /// By extending [EmailIdpBaseEndpoint], the email identity provider endpoints

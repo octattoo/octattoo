@@ -1,6 +1,7 @@
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
+import '../theming/css_palette.dart';
 import 'handle_validator.dart';
 
 class ArtistProfileEndpoint extends Endpoint {
@@ -131,5 +132,35 @@ class ArtistProfileEndpoint extends Endpoint {
     }
 
     throw StateError('Could not generate available handle');
+  }
+
+  /// Updates the seed color for a profile and regenerates the CSS palette.
+  Future<ArtistProfile> updateSeedColor(
+    Session session,
+    UuidValue profileId,
+    int? seedColor,
+  ) async {
+    final authUserId = session.authenticated!.userIdentifier;
+    final profile = await ArtistProfile.db.findById(session, profileId);
+
+    if (profile == null ||
+        profile.authUserId != UuidValue.fromString(authUserId)) {
+      throw ArgumentError('Profile not found');
+    }
+
+    String? cssLight;
+    String? cssDark;
+    if (seedColor != null) {
+      final palette = generateCssPalette(seedColor);
+      cssLight = palette.light;
+      cssDark = palette.dark;
+    }
+
+    final updated = profile.copyWith(
+      seedColor: seedColor,
+      themeCssLight: cssLight,
+      themeCssDark: cssDark,
+    );
+    return await ArtistProfile.db.updateRow(session, updated);
   }
 }

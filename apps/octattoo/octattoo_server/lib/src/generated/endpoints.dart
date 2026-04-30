@@ -334,6 +334,32 @@ class Endpoints extends _i1.EndpointDispatch {
                         params['name'],
                       ),
         ),
+        'updateSeedColor': _i1.MethodConnector(
+          name: 'updateSeedColor',
+          params: {
+            'profileId': _i1.ParameterDescription(
+              name: 'profileId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'seedColor': _i1.ParameterDescription(
+              name: 'seedColor',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['artistProfile'] as _i3.ArtistProfileEndpoint)
+                      .updateSeedColor(
+                        session,
+                        params['profileId'],
+                        params['seedColor'],
+                      ),
+        ),
       },
     );
     connectors['emailIdp'] = _i1.EndpointConnector(
