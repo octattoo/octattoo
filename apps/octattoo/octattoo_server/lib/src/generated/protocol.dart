@@ -27,13 +27,16 @@ import 'greetings/greeting.dart' as _i12;
 import 'inventory/material.dart' as _i13;
 import 'inventory/material_status.dart' as _i14;
 import 'inventory/material_type.dart' as _i15;
-import 'storage/storage_quota_exceeded_exception.dart' as _i16;
-import 'storage/stored_file.dart' as _i17;
-import 'traceability/session_record.dart' as _i18;
+import 'secure_link/secure_link.dart' as _i16;
+import 'secure_link/secure_link_status.dart' as _i17;
+import 'secure_link/secure_link_type.dart' as _i18;
+import 'storage/storage_quota_exceeded_exception.dart' as _i19;
+import 'storage/stored_file.dart' as _i20;
+import 'traceability/session_record.dart' as _i21;
 import 'package:octattoo_server/src/generated/appointment/appointment.dart'
-    as _i19;
-import 'package:octattoo_server/src/generated/customer/customer.dart' as _i20;
-import 'package:octattoo_server/src/generated/inventory/material.dart' as _i21;
+    as _i22;
+import 'package:octattoo_server/src/generated/customer/customer.dart' as _i23;
+import 'package:octattoo_server/src/generated/inventory/material.dart' as _i24;
 export 'appointment/appointment.dart';
 export 'appointment/appointment_material.dart';
 export 'appointment/appointment_status.dart';
@@ -45,6 +48,9 @@ export 'greetings/greeting.dart';
 export 'inventory/material.dart';
 export 'inventory/material_status.dart';
 export 'inventory/material_type.dart';
+export 'secure_link/secure_link.dart';
+export 'secure_link/secure_link_status.dart';
+export 'secure_link/secure_link_type.dart';
 export 'storage/storage_quota_exceeded_exception.dart';
 export 'storage/stored_file.dart';
 export 'traceability/session_record.dart';
@@ -599,6 +605,112 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'secure_link',
+      dartName: 'SecureLink',
+      schema: 'public',
+      module: 'octattoo',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid_v7()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'artistProfileId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'token',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'type',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:SecureLinkType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'targetId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'expiresAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'renewedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:SecureLinkStatus',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'secure_link_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'secure_link_token_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'token',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'secure_link_artist_profile_id_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'artistProfileId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'session_record',
       dartName: 'SessionRecord',
       schema: 'public',
@@ -833,14 +945,23 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i15.MaterialType) {
       return _i15.MaterialType.fromJson(data) as T;
     }
-    if (t == _i16.StorageQuotaExceededException) {
-      return _i16.StorageQuotaExceededException.fromJson(data) as T;
+    if (t == _i16.SecureLink) {
+      return _i16.SecureLink.fromJson(data) as T;
     }
-    if (t == _i17.StoredFile) {
-      return _i17.StoredFile.fromJson(data) as T;
+    if (t == _i17.SecureLinkStatus) {
+      return _i17.SecureLinkStatus.fromJson(data) as T;
     }
-    if (t == _i18.SessionRecord) {
-      return _i18.SessionRecord.fromJson(data) as T;
+    if (t == _i18.SecureLinkType) {
+      return _i18.SecureLinkType.fromJson(data) as T;
+    }
+    if (t == _i19.StorageQuotaExceededException) {
+      return _i19.StorageQuotaExceededException.fromJson(data) as T;
+    }
+    if (t == _i20.StoredFile) {
+      return _i20.StoredFile.fromJson(data) as T;
+    }
+    if (t == _i21.SessionRecord) {
+      return _i21.SessionRecord.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Appointment?>()) {
       return (data != null ? _i5.Appointment.fromJson(data) : null) as T;
@@ -877,34 +998,43 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i15.MaterialType?>()) {
       return (data != null ? _i15.MaterialType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i16.StorageQuotaExceededException?>()) {
+    if (t == _i1.getType<_i16.SecureLink?>()) {
+      return (data != null ? _i16.SecureLink.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i17.SecureLinkStatus?>()) {
+      return (data != null ? _i17.SecureLinkStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i18.SecureLinkType?>()) {
+      return (data != null ? _i18.SecureLinkType.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i19.StorageQuotaExceededException?>()) {
       return (data != null
-              ? _i16.StorageQuotaExceededException.fromJson(data)
+              ? _i19.StorageQuotaExceededException.fromJson(data)
               : null)
           as T;
     }
-    if (t == _i1.getType<_i17.StoredFile?>()) {
-      return (data != null ? _i17.StoredFile.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i20.StoredFile?>()) {
+      return (data != null ? _i20.StoredFile.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i18.SessionRecord?>()) {
-      return (data != null ? _i18.SessionRecord.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i21.SessionRecord?>()) {
+      return (data != null ? _i21.SessionRecord.fromJson(data) : null) as T;
     }
     if (t == List<_i11.Customer>) {
       return (data as List).map((e) => deserialize<_i11.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i19.Appointment>) {
+    if (t == List<_i22.Appointment>) {
       return (data as List)
-              .map((e) => deserialize<_i19.Appointment>(e))
+              .map((e) => deserialize<_i22.Appointment>(e))
               .toList()
           as T;
     }
-    if (t == List<_i20.Customer>) {
-      return (data as List).map((e) => deserialize<_i20.Customer>(e)).toList()
+    if (t == List<_i23.Customer>) {
+      return (data as List).map((e) => deserialize<_i23.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i21.Material>) {
-      return (data as List).map((e) => deserialize<_i21.Material>(e)).toList()
+    if (t == List<_i24.Material>) {
+      return (data as List).map((e) => deserialize<_i24.Material>(e)).toList()
           as T;
     }
     try {
@@ -932,9 +1062,12 @@ class Protocol extends _i1.SerializationManagerServer {
       _i13.Material => 'Material',
       _i14.MaterialStatus => 'MaterialStatus',
       _i15.MaterialType => 'MaterialType',
-      _i16.StorageQuotaExceededException => 'StorageQuotaExceededException',
-      _i17.StoredFile => 'StoredFile',
-      _i18.SessionRecord => 'SessionRecord',
+      _i16.SecureLink => 'SecureLink',
+      _i17.SecureLinkStatus => 'SecureLinkStatus',
+      _i18.SecureLinkType => 'SecureLinkType',
+      _i19.StorageQuotaExceededException => 'StorageQuotaExceededException',
+      _i20.StoredFile => 'StoredFile',
+      _i21.SessionRecord => 'SessionRecord',
       _ => null,
     };
   }
@@ -971,11 +1104,17 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'MaterialStatus';
       case _i15.MaterialType():
         return 'MaterialType';
-      case _i16.StorageQuotaExceededException():
+      case _i16.SecureLink():
+        return 'SecureLink';
+      case _i17.SecureLinkStatus():
+        return 'SecureLinkStatus';
+      case _i18.SecureLinkType():
+        return 'SecureLinkType';
+      case _i19.StorageQuotaExceededException():
         return 'StorageQuotaExceededException';
-      case _i17.StoredFile():
+      case _i20.StoredFile():
         return 'StoredFile';
-      case _i18.SessionRecord():
+      case _i21.SessionRecord():
         return 'SessionRecord';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -1032,14 +1171,23 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'MaterialType') {
       return deserialize<_i15.MaterialType>(data['data']);
     }
+    if (dataClassName == 'SecureLink') {
+      return deserialize<_i16.SecureLink>(data['data']);
+    }
+    if (dataClassName == 'SecureLinkStatus') {
+      return deserialize<_i17.SecureLinkStatus>(data['data']);
+    }
+    if (dataClassName == 'SecureLinkType') {
+      return deserialize<_i18.SecureLinkType>(data['data']);
+    }
     if (dataClassName == 'StorageQuotaExceededException') {
-      return deserialize<_i16.StorageQuotaExceededException>(data['data']);
+      return deserialize<_i19.StorageQuotaExceededException>(data['data']);
     }
     if (dataClassName == 'StoredFile') {
-      return deserialize<_i17.StoredFile>(data['data']);
+      return deserialize<_i20.StoredFile>(data['data']);
     }
     if (dataClassName == 'SessionRecord') {
-      return deserialize<_i18.SessionRecord>(data['data']);
+      return deserialize<_i21.SessionRecord>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1087,10 +1235,12 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i11.Customer.t;
       case _i13.Material:
         return _i13.Material.t;
-      case _i17.StoredFile:
-        return _i17.StoredFile.t;
-      case _i18.SessionRecord:
-        return _i18.SessionRecord.t;
+      case _i16.SecureLink:
+        return _i16.SecureLink.t;
+      case _i20.StoredFile:
+        return _i20.StoredFile.t;
+      case _i21.SessionRecord:
+        return _i21.SessionRecord.t;
     }
     return null;
   }

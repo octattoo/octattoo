@@ -1,0 +1,29 @@
+### A tokenized, expiring link for client-facing features.
+class: SecureLink
+table: secure_link
+
+fields:
+  id: UuidValue?, defaultPersist=random_v7
+  ### The artist profile that owns this link.
+  artistProfileId: UuidValue
+  ### Unique base62 token (10 chars), permanently claimed.
+  token: String
+  ### The type of resource this link points to.
+  type: SecureLinkType
+  ### The ID of the target resource (quote, consent, etc.).
+  targetId: UuidValue
+  ### When this link expires.
+  expiresAt: DateTime
+  ### When this link was created.
+  createdAt: DateTime
+  ### When this link was last renewed (null if never renewed).
+  renewedAt: DateTime?
+  ### Current status of the link.
+  status: SecureLinkStatus
+
+indexes:
+  secure_link_token_idx:
+    fields: token
+    unique: true
+  secure_link_artist_profile_id_idx:
+    fields: artistProfileId

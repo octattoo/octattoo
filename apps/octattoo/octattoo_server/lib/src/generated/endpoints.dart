@@ -18,17 +18,20 @@ import '../auth/jwt_refresh_endpoint.dart' as _i5;
 import '../customer/customer_endpoint.dart' as _i6;
 import '../greetings/greeting_endpoint.dart' as _i7;
 import '../inventory/material_endpoint.dart' as _i8;
-import '../storage/storage_endpoint.dart' as _i9;
-import '../traceability/session_record_endpoint.dart' as _i10;
+import '../secure_link/secure_link_endpoint.dart' as _i9;
+import '../storage/storage_endpoint.dart' as _i10;
+import '../traceability/session_record_endpoint.dart' as _i11;
 import 'package:octattoo_server/src/generated/appointment/appointment_type.dart'
-    as _i11;
-import 'package:octattoo_server/src/generated/inventory/material_type.dart'
     as _i12;
-import 'dart:typed_data' as _i13;
-import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+import 'package:octattoo_server/src/generated/inventory/material_type.dart'
+    as _i13;
+import 'package:octattoo_server/src/generated/secure_link/secure_link_type.dart'
     as _i14;
+import 'dart:typed_data' as _i15;
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+    as _i16;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i15;
+    as _i17;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -76,13 +79,19 @@ class Endpoints extends _i1.EndpointDispatch {
           'material',
           null,
         ),
-      'storage': _i9.StorageEndpoint()
+      'secureLink': _i9.SecureLinkEndpoint()
+        ..initialize(
+          server,
+          'secureLink',
+          null,
+        ),
+      'storage': _i10.StorageEndpoint()
         ..initialize(
           server,
           'storage',
           null,
         ),
-      'sessionRecord': _i10.SessionRecordEndpoint()
+      'sessionRecord': _i11.SessionRecordEndpoint()
         ..initialize(
           server,
           'sessionRecord',
@@ -98,7 +107,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i11.AppointmentType>(),
+              type: _i1.getType<_i12.AppointmentType>(),
               nullable: false,
             ),
             'customerId': _i1.ParameterDescription(
@@ -608,7 +617,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i12.MaterialType>(),
+              type: _i1.getType<_i13.MaterialType>(),
               nullable: false,
             ),
             'manufacturer': _i1.ParameterDescription(
@@ -663,7 +672,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i12.MaterialType?>(),
+              type: _i1.getType<_i13.MaterialType?>(),
               nullable: true,
             ),
             'search': _i1.ParameterDescription(
@@ -826,6 +835,81 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+    connectors['secureLink'] = _i1.EndpointConnector(
+      name: 'secureLink',
+      endpoint: endpoints['secureLink']!,
+      methodConnectors: {
+        'createLink': _i1.MethodConnector(
+          name: 'createLink',
+          params: {
+            'type': _i1.ParameterDescription(
+              name: 'type',
+              type: _i1.getType<_i14.SecureLinkType>(),
+              nullable: false,
+            ),
+            'targetId': _i1.ParameterDescription(
+              name: 'targetId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'expiresInDays': _i1.ParameterDescription(
+              name: 'expiresInDays',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['secureLink'] as _i9.SecureLinkEndpoint)
+                  .createLink(
+                    session,
+                    type: params['type'],
+                    targetId: params['targetId'],
+                    expiresInDays: params['expiresInDays'],
+                  ),
+        ),
+        'resolveLink': _i1.MethodConnector(
+          name: 'resolveLink',
+          params: {
+            'token': _i1.ParameterDescription(
+              name: 'token',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['secureLink'] as _i9.SecureLinkEndpoint)
+                  .resolveLink(
+                    session,
+                    params['token'],
+                  ),
+        ),
+        'renewLink': _i1.MethodConnector(
+          name: 'renewLink',
+          params: {
+            'linkId': _i1.ParameterDescription(
+              name: 'linkId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['secureLink'] as _i9.SecureLinkEndpoint).renewLink(
+                    session,
+                    params['linkId'],
+                  ),
+        ),
+      },
+    );
     connectors['storage'] = _i1.EndpointConnector(
       name: 'storage',
       endpoint: endpoints['storage']!,
@@ -845,7 +929,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'bytes': _i1.ParameterDescription(
               name: 'bytes',
-              type: _i1.getType<_i13.ByteData>(),
+              type: _i1.getType<_i15.ByteData>(),
               nullable: false,
             ),
           },
@@ -854,7 +938,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['storage'] as _i9.StorageEndpoint).uploadFile(
+                  (endpoints['storage'] as _i10.StorageEndpoint).uploadFile(
                     session,
                     fileName: params['fileName'],
                     mimeType: params['mimeType'],
@@ -874,7 +958,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['storage'] as _i9.StorageEndpoint).getFile(
+              ) async => (endpoints['storage'] as _i10.StorageEndpoint).getFile(
                 session,
                 params['fileId'],
               ),
@@ -893,7 +977,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['storage'] as _i9.StorageEndpoint).deleteFile(
+                  (endpoints['storage'] as _i10.StorageEndpoint).deleteFile(
                     session,
                     params['fileId'],
                   ),
@@ -917,7 +1001,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['storage'] as _i9.StorageEndpoint).getVariantUrl(
+                  (endpoints['storage'] as _i10.StorageEndpoint).getVariantUrl(
                     session,
                     fileId: params['fileId'],
                     variant: params['variant'],
@@ -930,7 +1014,7 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async => (endpoints['storage'] as _i9.StorageEndpoint)
+              ) async => (endpoints['storage'] as _i10.StorageEndpoint)
                   .getStorageUsage(session),
         ),
         'setStorageQuota': _i1.MethodConnector(
@@ -946,8 +1030,8 @@ class Endpoints extends _i1.EndpointDispatch {
               (
                 _i1.Session session,
                 Map<String, dynamic> params,
-              ) async =>
-                  (endpoints['storage'] as _i9.StorageEndpoint).setStorageQuota(
+              ) async => (endpoints['storage'] as _i10.StorageEndpoint)
+                  .setStorageQuota(
                     session,
                     params['quotaBytes'],
                   ),
@@ -972,7 +1056,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['sessionRecord'] as _i10.SessionRecordEndpoint)
+                  (endpoints['sessionRecord'] as _i11.SessionRecordEndpoint)
                       .getByAppointmentId(
                         session,
                         params['appointmentId'],
@@ -980,9 +1064,9 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i14.Endpoints()
+    modules['serverpod_auth_idp'] = _i16.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i15.Endpoints()
+    modules['serverpod_auth_core'] = _i17.Endpoints()
       ..initializeEndpoints(server);
   }
 }
