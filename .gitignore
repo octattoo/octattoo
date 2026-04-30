@@ -1,3 +1,6 @@
+# Agent tooling
+.agents/
+
 # Dart/Flutter
 .dart_tool/
 .packages
