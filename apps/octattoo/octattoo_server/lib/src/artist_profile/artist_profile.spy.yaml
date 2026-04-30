@@ -8,6 +8,8 @@ fields:
   authUserId: UuidValue
   ### Display name for the artist.
   name: String
+  ### Days before expiration to trigger alerts (default 30).
+  expirationAlertDays: int, default=30
 
 indexes:
   artist_profile_auth_user_id_unique:

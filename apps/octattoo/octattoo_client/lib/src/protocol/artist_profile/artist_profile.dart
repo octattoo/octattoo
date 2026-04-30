@@ -18,12 +18,14 @@ abstract class ArtistProfile implements _i1.SerializableModel {
     this.id,
     required this.authUserId,
     required this.name,
-  });
+    int? expirationAlertDays,
+  }) : expirationAlertDays = expirationAlertDays ?? 30;
 
   factory ArtistProfile({
     _i1.UuidValue? id,
     required _i1.UuidValue authUserId,
     required String name,
+    int? expirationAlertDays,
   }) = _ArtistProfileImpl;
 
   factory ArtistProfile.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -35,6 +37,7 @@ abstract class ArtistProfile implements _i1.SerializableModel {
         jsonSerialization['authUserId'],
       ),
       name: jsonSerialization['name'] as String,
+      expirationAlertDays: jsonSerialization['expirationAlertDays'] as int?,
     );
   }
 
@@ -49,6 +52,9 @@ abstract class ArtistProfile implements _i1.SerializableModel {
   /// Display name for the artist.
   String name;
 
+  /// Days before expiration to trigger alerts (default 30).
+  int expirationAlertDays;
+
   /// Returns a shallow copy of this [ArtistProfile]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -56,6 +62,7 @@ abstract class ArtistProfile implements _i1.SerializableModel {
     _i1.UuidValue? id,
     _i1.UuidValue? authUserId,
     String? name,
+    int? expirationAlertDays,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -64,6 +71,7 @@ abstract class ArtistProfile implements _i1.SerializableModel {
       if (id != null) 'id': id?.toJson(),
       'authUserId': authUserId.toJson(),
       'name': name,
+      'expirationAlertDays': expirationAlertDays,
     };
   }
 
@@ -80,10 +88,12 @@ class _ArtistProfileImpl extends ArtistProfile {
     _i1.UuidValue? id,
     required _i1.UuidValue authUserId,
     required String name,
+    int? expirationAlertDays,
   }) : super._(
          id: id,
          authUserId: authUserId,
          name: name,
+         expirationAlertDays: expirationAlertDays,
        );
 
   /// Returns a shallow copy of this [ArtistProfile]
@@ -94,11 +104,13 @@ class _ArtistProfileImpl extends ArtistProfile {
     Object? id = _Undefined,
     _i1.UuidValue? authUserId,
     String? name,
+    int? expirationAlertDays,
   }) {
     return ArtistProfile(
       id: id is _i1.UuidValue? ? id : this.id,
       authUserId: authUserId ?? this.authUserId,
       name: name ?? this.name,
+      expirationAlertDays: expirationAlertDays ?? this.expirationAlertDays,
     );
   }
 }

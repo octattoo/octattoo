@@ -449,6 +449,14 @@ class EndpointMaterial extends _i1.EndpointRef {
       'quantity': quantity,
     },
   );
+
+  /// Lists materials nearing expiration for the current artist profile.
+  _i2.Future<List<_i8.Material>> listExpiringMaterials() =>
+      caller.callServerEndpoint<List<_i8.Material>>(
+        'material',
+        'listExpiringMaterials',
+        {},
+      );
 }
 
 class Modules {
