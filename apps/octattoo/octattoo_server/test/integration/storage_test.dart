@@ -39,7 +39,7 @@ void main() {
     });
 
     test('uploads a file and retrieves it by ID', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final bytes = ByteData.view(
         Uint8List.fromList([1, 2, 3, 4, 5]).buffer,
@@ -63,7 +63,7 @@ void main() {
     });
 
     test('upload stores file at correct S3 path', () async {
-      final profileId = await endpoints.artistProfile.getMyProfileId(session1);
+      final profileId = (await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a')).id!;
 
       final bytes = ByteData.view(
         Uint8List.fromList([1, 2, 3]).buffer,
@@ -85,7 +85,7 @@ void main() {
     });
 
     test('quota tracking: upload increments used storage', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final bytes = ByteData.view(
         Uint8List.fromList(List.filled(1000, 0)).buffer,
@@ -103,7 +103,7 @@ void main() {
     });
 
     test('quota enforcement: rejects upload when quota exceeded', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       // Set a tiny quota via the endpoint (persisted in DB)
       await endpoints.storage.setStorageQuota(session1, 100);
@@ -124,7 +124,7 @@ void main() {
     });
 
     test('file deletion removes original and all variants', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final bytes = ByteData.view(
         Uint8List.fromList([1, 2, 3]).buffer,
@@ -163,7 +163,7 @@ void main() {
     });
 
     test('on-demand variant generation returns URL', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final bytes = ByteData.view(
         Uint8List.fromList([1, 2, 3, 4, 5]).buffer,
@@ -187,7 +187,7 @@ void main() {
     });
 
     test('variants are not counted in quota', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final bytes = ByteData.view(
         Uint8List.fromList(List.filled(100, 0)).buffer,
@@ -214,8 +214,8 @@ void main() {
 
     test('cross-profile isolation: cannot access other profile files',
         () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
-      await endpoints.artistProfile.getMyProfileId(session2);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
+      await endpoints.artistProfile.createProfile(session2, 'B', 'artist_b');
 
       final bytes = ByteData.view(
         Uint8List.fromList([1, 2, 3]).buffer,

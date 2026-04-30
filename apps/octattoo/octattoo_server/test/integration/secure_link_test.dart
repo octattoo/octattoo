@@ -29,7 +29,7 @@ void main() {
 
     test('createLink generates a 10-char base62 token with correct expiration',
         () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final link = await endpoints.secureLink.createLink(
         session1,
@@ -49,7 +49,7 @@ void main() {
     });
 
     test('resolveLink returns active link data', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final created = await endpoints.secureLink.createLink(
         session1,
@@ -69,7 +69,7 @@ void main() {
     });
 
     test('resolveLink returns null for expired link', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final created = await endpoints.secureLink.createLink(
         session1,
@@ -87,7 +87,7 @@ void main() {
     });
 
     test('renewLink extends expiration on expired link', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final created = await endpoints.secureLink.createLink(
         session1,
@@ -116,8 +116,8 @@ void main() {
 
     test('cross-profile isolation: cannot renew another profile link',
         () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
-      await endpoints.artistProfile.getMyProfileId(session2);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
+      await endpoints.artistProfile.createProfile(session2, 'B', 'artist_b');
 
       final created = await endpoints.secureLink.createLink(
         session1,

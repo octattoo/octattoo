@@ -30,12 +30,14 @@ import 'storage/stored_file.dart' as _i17;
 import 'traceability/session_record.dart' as _i18;
 import 'package:octattoo_client/src/protocol/appointment/appointment.dart'
     as _i19;
-import 'package:octattoo_client/src/protocol/customer/customer.dart' as _i20;
-import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i21;
+import 'package:octattoo_client/src/protocol/artist_profile/artist_profile.dart'
+    as _i20;
+import 'package:octattoo_client/src/protocol/customer/customer.dart' as _i21;
+import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i22;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i22;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
     as _i23;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i24;
 export 'appointment/appointment.dart';
 export 'appointment/appointment_material.dart';
 export 'appointment/appointment_status.dart';
@@ -206,19 +208,25 @@ class Protocol extends _i1.SerializationManager {
               .toList()
           as T;
     }
-    if (t == List<_i20.Customer>) {
-      return (data as List).map((e) => deserialize<_i20.Customer>(e)).toList()
+    if (t == List<_i20.ArtistProfile>) {
+      return (data as List)
+              .map((e) => deserialize<_i20.ArtistProfile>(e))
+              .toList()
           as T;
     }
-    if (t == List<_i21.Material>) {
-      return (data as List).map((e) => deserialize<_i21.Material>(e)).toList()
+    if (t == List<_i21.Customer>) {
+      return (data as List).map((e) => deserialize<_i21.Customer>(e)).toList()
           as T;
     }
-    try {
-      return _i22.Protocol().deserialize<T>(data, t);
-    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    if (t == List<_i22.Material>) {
+      return (data as List).map((e) => deserialize<_i22.Material>(e)).toList()
+          as T;
+    }
     try {
       return _i23.Protocol().deserialize<T>(data, t);
+    } on _i1.DeserializationTypeNotFoundException catch (_) {}
+    try {
+      return _i24.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -291,11 +299,11 @@ class Protocol extends _i1.SerializationManager {
       case _i18.SessionRecord():
         return 'SessionRecord';
     }
-    className = _i22.Protocol().getClassNameForObject(data);
+    className = _i23.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i23.Protocol().getClassNameForObject(data);
+    className = _i24.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -361,11 +369,11 @@ class Protocol extends _i1.SerializationManager {
     }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i22.Protocol().deserializeByClassName(data);
+      return _i23.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i23.Protocol().deserializeByClassName(data);
+      return _i24.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
@@ -380,10 +388,10 @@ class Protocol extends _i1.SerializationManager {
       return null;
     }
     try {
-      return _i22.Protocol().mapRecordToJson(record);
+      return _i23.Protocol().mapRecordToJson(record);
     } catch (_) {}
     try {
-      return _i23.Protocol().mapRecordToJson(record);
+      return _i24.Protocol().mapRecordToJson(record);
     } catch (_) {}
     throw Exception('Unsupported record type ${record.runtimeType}');
   }

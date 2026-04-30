@@ -27,7 +27,7 @@ void main() {
 
     test('creates a customer and returns it', () async {
       // Ensure artist profile exists
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final result = await endpoints.customer.createCustomer(
         session1,
@@ -42,7 +42,7 @@ void main() {
     });
 
     test('detects duplicate by email on create', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       await endpoints.customer.createCustomer(
         session1,
@@ -62,7 +62,7 @@ void main() {
     });
 
     test('detects duplicate by phone on create', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       await endpoints.customer.createCustomer(
         session1,
@@ -81,7 +81,7 @@ void main() {
     });
 
     test('lists customers for current profile', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       await endpoints.customer.createCustomer(
         session1,
@@ -94,7 +94,7 @@ void main() {
     });
 
     test('search filters customers by name', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       await endpoints.customer.createCustomer(
         session1,
@@ -116,7 +116,7 @@ void main() {
     });
 
     test('updates a customer', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final created = await endpoints.customer.createCustomer(
         session1,
@@ -137,7 +137,7 @@ void main() {
     });
 
     test('deletes a customer', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final created = await endpoints.customer.createCustomer(
         session1,
@@ -161,8 +161,8 @@ void main() {
     test(
       'cross-profile isolation: cannot see other profile customers',
       () async {
-        await endpoints.artistProfile.getMyProfileId(session1);
-        await endpoints.artistProfile.getMyProfileId(session2);
+        await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
+        await endpoints.artistProfile.createProfile(session2, 'B', 'artist_b');
 
         await endpoints.customer.createCustomer(
           session1,
@@ -178,8 +178,8 @@ void main() {
     test(
       'cross-profile isolation: cannot update other profile customer',
       () async {
-        await endpoints.artistProfile.getMyProfileId(session1);
-        await endpoints.artistProfile.getMyProfileId(session2);
+        await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
+        await endpoints.artistProfile.createProfile(session2, 'B', 'artist_b');
 
         final created = await endpoints.customer.createCustomer(
           session1,

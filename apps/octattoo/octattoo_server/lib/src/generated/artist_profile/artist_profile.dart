@@ -12,13 +12,14 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod/serverpod.dart' as _i1;
 
-/// An artist's brand identity, auto-created on account registration.
+/// An artist's brand identity. One Account can have many Artist Profiles.
 abstract class ArtistProfile
     implements _i1.TableRow<_i1.UuidValue?>, _i1.ProtocolSerialization {
   ArtistProfile._({
     this.id,
     required this.authUserId,
     required this.name,
+    required this.handle,
     int? expirationAlertDays,
     int? storageQuotaBytes,
   }) : expirationAlertDays = expirationAlertDays ?? 30,
@@ -28,6 +29,7 @@ abstract class ArtistProfile
     _i1.UuidValue? id,
     required _i1.UuidValue authUserId,
     required String name,
+    required String handle,
     int? expirationAlertDays,
     int? storageQuotaBytes,
   }) = _ArtistProfileImpl;
@@ -41,6 +43,7 @@ abstract class ArtistProfile
         jsonSerialization['authUserId'],
       ),
       name: jsonSerialization['name'] as String,
+      handle: jsonSerialization['handle'] as String,
       expirationAlertDays: jsonSerialization['expirationAlertDays'] as int?,
       storageQuotaBytes: jsonSerialization['storageQuotaBytes'] as int?,
     );
@@ -59,6 +62,9 @@ abstract class ArtistProfile
   /// Display name for the artist.
   String name;
 
+  /// Unique URL slug for the profile.
+  String handle;
+
   /// Days before expiration to trigger alerts (default 30).
   int expirationAlertDays;
 
@@ -75,6 +81,7 @@ abstract class ArtistProfile
     _i1.UuidValue? id,
     _i1.UuidValue? authUserId,
     String? name,
+    String? handle,
     int? expirationAlertDays,
     int? storageQuotaBytes,
   });
@@ -85,6 +92,7 @@ abstract class ArtistProfile
       if (id != null) 'id': id?.toJson(),
       'authUserId': authUserId.toJson(),
       'name': name,
+      'handle': handle,
       'expirationAlertDays': expirationAlertDays,
       'storageQuotaBytes': storageQuotaBytes,
     };
@@ -97,6 +105,7 @@ abstract class ArtistProfile
       if (id != null) 'id': id?.toJson(),
       'authUserId': authUserId.toJson(),
       'name': name,
+      'handle': handle,
       'expirationAlertDays': expirationAlertDays,
       'storageQuotaBytes': storageQuotaBytes,
     };
@@ -139,12 +148,14 @@ class _ArtistProfileImpl extends ArtistProfile {
     _i1.UuidValue? id,
     required _i1.UuidValue authUserId,
     required String name,
+    required String handle,
     int? expirationAlertDays,
     int? storageQuotaBytes,
   }) : super._(
          id: id,
          authUserId: authUserId,
          name: name,
+         handle: handle,
          expirationAlertDays: expirationAlertDays,
          storageQuotaBytes: storageQuotaBytes,
        );
@@ -157,6 +168,7 @@ class _ArtistProfileImpl extends ArtistProfile {
     Object? id = _Undefined,
     _i1.UuidValue? authUserId,
     String? name,
+    String? handle,
     int? expirationAlertDays,
     int? storageQuotaBytes,
   }) {
@@ -164,6 +176,7 @@ class _ArtistProfileImpl extends ArtistProfile {
       id: id is _i1.UuidValue? ? id : this.id,
       authUserId: authUserId ?? this.authUserId,
       name: name ?? this.name,
+      handle: handle ?? this.handle,
       expirationAlertDays: expirationAlertDays ?? this.expirationAlertDays,
       storageQuotaBytes: storageQuotaBytes ?? this.storageQuotaBytes,
     );
@@ -182,6 +195,11 @@ class ArtistProfileUpdateTable extends _i1.UpdateTable<ArtistProfileTable> {
 
   _i1.ColumnValue<String, String> name(String value) => _i1.ColumnValue(
     table.name,
+    value,
+  );
+
+  _i1.ColumnValue<String, String> handle(String value) => _i1.ColumnValue(
+    table.handle,
     value,
   );
 
@@ -208,6 +226,10 @@ class ArtistProfileTable extends _i1.Table<_i1.UuidValue?> {
       'name',
       this,
     );
+    handle = _i1.ColumnString(
+      'handle',
+      this,
+    );
     expirationAlertDays = _i1.ColumnInt(
       'expirationAlertDays',
       this,
@@ -228,6 +250,9 @@ class ArtistProfileTable extends _i1.Table<_i1.UuidValue?> {
   /// Display name for the artist.
   late final _i1.ColumnString name;
 
+  /// Unique URL slug for the profile.
+  late final _i1.ColumnString handle;
+
   /// Days before expiration to trigger alerts (default 30).
   late final _i1.ColumnInt expirationAlertDays;
 
@@ -239,6 +264,7 @@ class ArtistProfileTable extends _i1.Table<_i1.UuidValue?> {
     id,
     authUserId,
     name,
+    handle,
     expirationAlertDays,
     storageQuotaBytes,
   ];

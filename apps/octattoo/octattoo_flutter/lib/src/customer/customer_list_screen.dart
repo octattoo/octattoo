@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../common/get_started_prompt.dart';
 import 'customer_list_viewmodel.dart';
 
 class CustomerListScreen extends StatefulWidget {
@@ -37,7 +38,12 @@ class _CustomerListScreenState extends State<CustomerListScreen> {
               child: _viewModel.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : _viewModel.filteredCustomers.isEmpty
-                  ? const Center(child: Text('No clients found'))
+                  ? const GetStartedPrompt(
+                      title: 'No clients yet',
+                      description: 'Add your first client to start managing appointments and projects.',
+                      icon: Icons.people,
+                      isEmpty: true,
+                    )
                   : ListView.builder(
                       itemCount: _viewModel.filteredCustomers.length,
                       itemBuilder: (context, index) {

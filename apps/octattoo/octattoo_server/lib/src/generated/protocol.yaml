@@ -5,7 +5,11 @@ appointment:
   - recordMaterial:
   - listAppointments:
 artistProfile:
-  - getMyProfileId:
+  - createProfile:
+  - isHandleAvailable:
+  - listMyProfiles:
+  - updateHandle:
+  - suggestHandle:
 emailIdp:
   - login:
   - startRegistration:
@@ -14,6 +18,9 @@ emailIdp:
   - startPasswordReset:
   - verifyPasswordResetCode:
   - finishPasswordReset:
+  - hasAccount:
+googleIdp:
+  - login:
   - hasAccount:
 jwtRefresh:
   - refreshAccessToken:

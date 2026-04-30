@@ -27,7 +27,7 @@ void main() {
     });
 
     test('creates an ink material and returns it', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final material = await endpoints.material.createMaterial(
         session1,
@@ -47,7 +47,7 @@ void main() {
     });
 
     test('creates a needle material with quantity', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final material = await endpoints.material.createMaterial(
         session1,
@@ -66,7 +66,7 @@ void main() {
     });
 
     test('rejects ink with quantity', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       expect(
         () => endpoints.material.createMaterial(
@@ -84,7 +84,7 @@ void main() {
     });
 
     test('rejects needle without quantity', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       expect(
         () => endpoints.material.createMaterial(
@@ -101,7 +101,7 @@ void main() {
     });
 
     test('lists materials for current profile', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       await endpoints.material.createMaterial(
         session1,
@@ -118,7 +118,7 @@ void main() {
     });
 
     test('filters materials by type', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       await endpoints.material.createMaterial(
         session1,
@@ -155,7 +155,7 @@ void main() {
     });
 
     test('search filters by productName', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       await endpoints.material.createMaterial(
         session1,
@@ -176,7 +176,7 @@ void main() {
     });
 
     test('toggleInkStatus flips inStock to empty and back', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final created = await endpoints.material.createMaterial(
         session1,
@@ -202,7 +202,7 @@ void main() {
     });
 
     test('toggleInkStatus rejects needle material', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final needle = await endpoints.material.createMaterial(
         session1,
@@ -222,7 +222,7 @@ void main() {
     });
 
     test('setNeedleQuantity to 0 auto-marks empty', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final needle = await endpoints.material.createMaterial(
         session1,
@@ -246,7 +246,7 @@ void main() {
     });
 
     test('setNeedleQuantity back to positive restores inStock', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final needle = await endpoints.material.createMaterial(
         session1,
@@ -276,7 +276,7 @@ void main() {
     });
 
     test('updates a material', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final created = await endpoints.material.createMaterial(
         session1,
@@ -304,7 +304,7 @@ void main() {
     });
 
     test('deletes a material', () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
 
       final created = await endpoints.material.createMaterial(
         session1,
@@ -331,8 +331,8 @@ void main() {
 
     test('cross-profile isolation: cannot see other profile materials',
         () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
-      await endpoints.artistProfile.getMyProfileId(session2);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
+      await endpoints.artistProfile.createProfile(session2, 'B', 'artist_b');
 
       await endpoints.material.createMaterial(
         session1,
@@ -350,8 +350,8 @@ void main() {
 
     test('cross-profile isolation: cannot toggle other profile material',
         () async {
-      await endpoints.artistProfile.getMyProfileId(session1);
-      await endpoints.artistProfile.getMyProfileId(session2);
+      await endpoints.artistProfile.createProfile(session1, 'A', 'artist_a');
+      await endpoints.artistProfile.createProfile(session2, 'B', 'artist_b');
 
       final created = await endpoints.material.createMaterial(
         session1,

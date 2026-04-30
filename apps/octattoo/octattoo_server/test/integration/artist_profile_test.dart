@@ -5,48 +5,40 @@ import 'test_tools/serverpod_test_tools.dart';
 
 void main() {
   withServerpod('ArtistProfile', (sessionBuilder, endpoints) {
-    test('authenticated endpoint returns artistProfileId', () async {
-      final authUserId = UuidValue.fromString(
-        '550e8400-e29b-41d4-a716-446655440000',
-      );
-
-      final authenticatedSession = sessionBuilder.copyWith(
+    test('createProfile returns profile with id', () async {
+      final auth = sessionBuilder.copyWith(
         authentication: AuthenticationOverride.authenticationInfo(
-          authUserId.uuid,
+          '550e8400-e29b-41d4-a716-446655440000',
           {},
         ),
       );
 
-      final profileId = await endpoints.artistProfile.getMyProfileId(
-        authenticatedSession,
+      final profile = await endpoints.artistProfile.createProfile(
+        auth,
+        'Artist',
+        'artist_test',
       );
-      expect(profileId, isA<UuidValue>());
+      expect(profile.id, isA<UuidValue>());
     });
 
-    test('returns same profileId on subsequent calls', () async {
-      final authUserId = UuidValue.fromString(
-        '550e8400-e29b-41d4-a716-446655440001',
-      );
-
-      final authenticatedSession = sessionBuilder.copyWith(
+    test('listMyProfiles returns created profiles', () async {
+      final auth = sessionBuilder.copyWith(
         authentication: AuthenticationOverride.authenticationInfo(
-          authUserId.uuid,
+          '550e8400-e29b-41d4-a716-446655440001',
           {},
         ),
       );
 
-      final first = await endpoints.artistProfile.getMyProfileId(
-        authenticatedSession,
-      );
-      final second = await endpoints.artistProfile.getMyProfileId(
-        authenticatedSession,
-      );
-      expect(first, equals(second));
+      await endpoints.artistProfile.createProfile(auth, 'First', 'first_p');
+      await endpoints.artistProfile.createProfile(auth, 'Second', 'second_p');
+
+      final profiles = await endpoints.artistProfile.listMyProfiles(auth);
+      expect(profiles, hasLength(2));
     });
 
     test('rejects unauthenticated calls', () async {
       expect(
-        () => endpoints.artistProfile.getMyProfileId(sessionBuilder),
+        () => endpoints.artistProfile.listMyProfiles(sessionBuilder),
         throwsA(isA<ServerpodUnauthenticatedException>()),
       );
     });

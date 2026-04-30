@@ -5,13 +5,45 @@ import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 
 import 'src/appointment/appointment_list_screen.dart';
-import 'src/inventory/inventory_list_screen.dart';
-import 'src/inventory/material_form_screen.dart';
-
 import 'src/auth/sign_in_screen.dart';
 import 'src/customer/customer_list_screen.dart';
+import 'src/inventory/inventory_list_screen.dart';
+import 'src/inventory/material_form_screen.dart';
+import 'src/onboarding/onboarding_screen.dart';
+import 'src/profile/profile_switcher.dart';
 
-late final Client client;
+late Client client;
+
+/// Holds the active profile state for the app.
+class ProfileState extends ChangeNotifier {
+  List<ProfileEntry> _profiles = [];
+  String? _activeProfileId;
+
+  List<ProfileEntry> get profiles => _profiles;
+  String? get activeProfileId => _activeProfileId;
+  bool get hasProfiles => _profiles.isNotEmpty;
+
+  void setProfiles(List<ProfileEntry> profiles) {
+    _profiles = profiles;
+    if (_activeProfileId == null && profiles.isNotEmpty) {
+      _activeProfileId = profiles.first.id;
+    }
+    notifyListeners();
+  }
+
+  void switchProfile(String id) {
+    _activeProfileId = id;
+    notifyListeners();
+  }
+
+  void clear() {
+    _profiles = [];
+    _activeProfileId = null;
+    notifyListeners();
+  }
+}
+
+final profileState = ProfileState();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,14 +62,25 @@ final _router = GoRouter(
   redirect: (context, state) {
     final isAuthenticated = client.auth.isAuthenticated;
     final isOnAuth = state.matchedLocation == '/sign-in';
+    final isOnOnboarding = state.matchedLocation == '/onboarding';
+
     if (!isAuthenticated && !isOnAuth) return '/sign-in';
-    if (isAuthenticated && isOnAuth) return '/appointments';
+    if (isAuthenticated && isOnAuth) {
+      return profileState.hasProfiles ? '/appointments' : '/onboarding';
+    }
+    if (isAuthenticated && !profileState.hasProfiles && !isOnOnboarding) {
+      return '/onboarding';
+    }
     return null;
   },
   routes: [
     GoRoute(
       path: '/sign-in',
       builder: (context, state) => const SignInScreen(),
+    ),
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingScreen(),
     ),
     GoRoute(
       path: '/inventory',
@@ -62,8 +105,7 @@ final _router = GoRouter(
           routes: [
             GoRoute(
               path: '/appointments',
-              builder: (context, state) =>
-                  const AppointmentListScreen(),
+              builder: (context, state) => const AppointmentListScreen(),
             ),
           ],
         ),
@@ -127,7 +169,24 @@ class AppShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('octattoo')),
+      appBar: AppBar(
+        title: const Text('octattoo'),
+        actions: [
+          ListenableBuilder(
+            listenable: profileState,
+            builder: (context, _) {
+              if (profileState.profiles.length <= 1) {
+                return const SizedBox.shrink();
+              }
+              return ProfileSwitcher(
+                profiles: profileState.profiles,
+                activeProfileId: profileState.activeProfileId!,
+                onSwitch: profileState.switchProfile,
+              );
+            },
+          ),
+        ],
+      ),
       drawer: const AppDrawer(),
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
