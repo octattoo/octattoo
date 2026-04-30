@@ -4,6 +4,7 @@ import 'package:octattoo_client/octattoo_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 
+import 'src/appointment/appointment_list_screen.dart';
 import 'src/inventory/inventory_list_screen.dart';
 import 'src/inventory/material_form_screen.dart';
 
@@ -62,7 +63,7 @@ final _router = GoRouter(
             GoRoute(
               path: '/appointments',
               builder: (context, state) =>
-                  const PlaceholderScreen(title: 'Appointments'),
+                  const AppointmentListScreen(),
             ),
           ],
         ),

@@ -1,0 +1,24 @@
+### A material linked to an appointment with snapshot data for traceability.
+class: AppointmentMaterial
+table: appointment_material
+
+fields:
+  id: UuidValue?, defaultPersist=random_v7
+  ### The appointment this material is linked to.
+  appointmentId: UuidValue
+  ### The source material from inventory.
+  materialId: UuidValue
+  ### Snapshot: manufacturer at link time.
+  manufacturer: String
+  ### Snapshot: product name at link time.
+  productName: String
+  ### Snapshot: batch number at link time.
+  batchNumber: String
+  ### When this material was linked.
+  linkedAt: DateTime?, defaultPersist=now
+
+indexes:
+  appointment_material_appointment_id_idx:
+    fields: appointmentId
+  appointment_material_material_id_idx:
+    fields: materialId

@@ -12,18 +12,93 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:serverpod_client/serverpod_client.dart' as _i1;
 import 'dart:async' as _i2;
-import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+import 'package:octattoo_client/src/protocol/appointment/appointment.dart'
     as _i3;
-import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+import 'package:octattoo_client/src/protocol/appointment/appointment_type.dart'
     as _i4;
-import 'package:octattoo_client/src/protocol/customer/create_customer_result.dart'
+import 'package:octattoo_client/src/protocol/appointment/appointment_material.dart'
     as _i5;
-import 'package:octattoo_client/src/protocol/customer/customer.dart' as _i6;
-import 'package:octattoo_client/src/protocol/greetings/greeting.dart' as _i7;
-import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i8;
+import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
+    as _i6;
+import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
+    as _i7;
+import 'package:octattoo_client/src/protocol/customer/create_customer_result.dart'
+    as _i8;
+import 'package:octattoo_client/src/protocol/customer/customer.dart' as _i9;
+import 'package:octattoo_client/src/protocol/greetings/greeting.dart' as _i10;
+import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i11;
 import 'package:octattoo_client/src/protocol/inventory/material_type.dart'
-    as _i9;
-import 'protocol.dart' as _i10;
+    as _i12;
+import 'protocol.dart' as _i13;
+
+/// {@category Endpoint}
+class EndpointAppointment extends _i1.EndpointRef {
+  EndpointAppointment(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'appointment';
+
+  /// Creates a new appointment in Scheduled status.
+  _i2.Future<_i3.Appointment> createAppointment({
+    required _i4.AppointmentType type,
+    required _i1.UuidValue customerId,
+    required DateTime scheduledAt,
+    String? notes,
+  }) => caller.callServerEndpoint<_i3.Appointment>(
+    'appointment',
+    'createAppointment',
+    {
+      'type': type,
+      'customerId': customerId,
+      'scheduledAt': scheduledAt,
+      'notes': notes,
+    },
+  );
+
+  /// Transitions appointment from Scheduled to In Progress.
+  _i2.Future<_i3.Appointment> startAppointment(_i1.UuidValue appointmentId) =>
+      caller.callServerEndpoint<_i3.Appointment>(
+        'appointment',
+        'startAppointment',
+        {'appointmentId': appointmentId},
+      );
+
+  /// Transitions appointment from In Progress to Finalized.
+  /// Returns a warning flag if tattoo-type with zero materials.
+  _i2.Future<_i3.Appointment> finalizeAppointment(
+    _i1.UuidValue appointmentId, {
+    required bool overrideZeroMaterials,
+  }) => caller.callServerEndpoint<_i3.Appointment>(
+    'appointment',
+    'finalizeAppointment',
+    {
+      'appointmentId': appointmentId,
+      'overrideZeroMaterials': overrideZeroMaterials,
+    },
+  );
+
+  /// Records a material from inventory, creating a snapshot.
+  /// Only allowed when appointment is In Progress.
+  _i2.Future<_i5.AppointmentMaterial> recordMaterial({
+    required _i1.UuidValue appointmentId,
+    required _i1.UuidValue materialId,
+  }) => caller.callServerEndpoint<_i5.AppointmentMaterial>(
+    'appointment',
+    'recordMaterial',
+    {
+      'appointmentId': appointmentId,
+      'materialId': materialId,
+    },
+  );
+
+  /// Lists appointments for the current artist profile.
+  _i2.Future<List<_i3.Appointment>> listAppointments() =>
+      caller.callServerEndpoint<List<_i3.Appointment>>(
+        'appointment',
+        'listAppointments',
+        {},
+      );
+}
 
 /// {@category Endpoint}
 class EndpointArtistProfile extends _i1.EndpointRef {
@@ -46,7 +121,7 @@ class EndpointArtistProfile extends _i1.EndpointRef {
 /// are made available on the server and enable the corresponding sign-in widget
 /// on the client.
 /// {@category Endpoint}
-class EndpointEmailIdp extends _i3.EndpointEmailIdpBase {
+class EndpointEmailIdp extends _i6.EndpointEmailIdpBase {
   EndpointEmailIdp(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -62,10 +137,10 @@ class EndpointEmailIdp extends _i3.EndpointEmailIdpBase {
   ///
   /// Throws an [AuthUserBlockedException] if the auth user is blocked.
   @override
-  _i2.Future<_i4.AuthSuccess> login({
+  _i2.Future<_i7.AuthSuccess> login({
     required String email,
     required String password,
-  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
     'emailIdp',
     'login',
     {
@@ -130,10 +205,10 @@ class EndpointEmailIdp extends _i3.EndpointEmailIdpBase {
   ///
   /// Returns a session for the newly created user.
   @override
-  _i2.Future<_i4.AuthSuccess> finishRegistration({
+  _i2.Future<_i7.AuthSuccess> finishRegistration({
     required String registrationToken,
     required String password,
-  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
     'emailIdp',
     'finishRegistration',
     {
@@ -228,7 +303,7 @@ class EndpointEmailIdp extends _i3.EndpointEmailIdpBase {
 /// By extending [RefreshJwtTokensEndpoint], the JWT token refresh endpoint
 /// is made available on the server and enables automatic token refresh on the client.
 /// {@category Endpoint}
-class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
+class EndpointJwtRefresh extends _i7.EndpointRefreshJwtTokens {
   EndpointJwtRefresh(_i1.EndpointCaller caller) : super(caller);
 
   @override
@@ -253,9 +328,9 @@ class EndpointJwtRefresh extends _i4.EndpointRefreshJwtTokens {
   /// This endpoint is unauthenticated, meaning the client won't include any
   /// authentication information with the call.
   @override
-  _i2.Future<_i4.AuthSuccess> refreshAccessToken({
+  _i2.Future<_i7.AuthSuccess> refreshAccessToken({
     required String refreshToken,
-  }) => caller.callServerEndpoint<_i4.AuthSuccess>(
+  }) => caller.callServerEndpoint<_i7.AuthSuccess>(
     'jwtRefresh',
     'refreshAccessToken',
     {'refreshToken': refreshToken},
@@ -271,12 +346,12 @@ class EndpointCustomer extends _i1.EndpointRef {
   String get name => 'customer';
 
   /// Creates a customer, returning potential duplicates.
-  _i2.Future<_i5.CreateCustomerResult> createCustomer({
+  _i2.Future<_i8.CreateCustomerResult> createCustomer({
     required String name,
     String? email,
     String? phone,
     String? notes,
-  }) => caller.callServerEndpoint<_i5.CreateCustomerResult>(
+  }) => caller.callServerEndpoint<_i8.CreateCustomerResult>(
     'customer',
     'createCustomer',
     {
@@ -288,29 +363,29 @@ class EndpointCustomer extends _i1.EndpointRef {
   );
 
   /// Lists customers for the current artist profile.
-  _i2.Future<List<_i6.Customer>> listCustomers({String? search}) =>
-      caller.callServerEndpoint<List<_i6.Customer>>(
+  _i2.Future<List<_i9.Customer>> listCustomers({String? search}) =>
+      caller.callServerEndpoint<List<_i9.Customer>>(
         'customer',
         'listCustomers',
         {'search': search},
       );
 
   /// Gets a single customer by ID (scoped to artist profile).
-  _i2.Future<_i6.Customer?> getCustomer(_i1.UuidValue customerId) =>
-      caller.callServerEndpoint<_i6.Customer?>(
+  _i2.Future<_i9.Customer?> getCustomer(_i1.UuidValue customerId) =>
+      caller.callServerEndpoint<_i9.Customer?>(
         'customer',
         'getCustomer',
         {'customerId': customerId},
       );
 
   /// Updates a customer (scoped to artist profile).
-  _i2.Future<_i6.Customer?> updateCustomer({
+  _i2.Future<_i9.Customer?> updateCustomer({
     required _i1.UuidValue customerId,
     required String name,
     String? email,
     String? phone,
     String? notes,
-  }) => caller.callServerEndpoint<_i6.Customer?>(
+  }) => caller.callServerEndpoint<_i9.Customer?>(
     'customer',
     'updateCustomer',
     {
@@ -341,8 +416,8 @@ class EndpointGreeting extends _i1.EndpointRef {
   String get name => 'greeting';
 
   /// Returns a personalized greeting message: "Hello {name}".
-  _i2.Future<_i7.Greeting> hello(String name) =>
-      caller.callServerEndpoint<_i7.Greeting>(
+  _i2.Future<_i10.Greeting> hello(String name) =>
+      caller.callServerEndpoint<_i10.Greeting>(
         'greeting',
         'hello',
         {'name': name},
@@ -357,15 +432,15 @@ class EndpointMaterial extends _i1.EndpointRef {
   String get name => 'material';
 
   /// Creates a material in the artist's personal inventory.
-  _i2.Future<_i8.Material> createMaterial({
-    required _i9.MaterialType type,
+  _i2.Future<_i11.Material> createMaterial({
+    required _i12.MaterialType type,
     required String manufacturer,
     required String supplier,
     required String productName,
     required String batchNumber,
     required DateTime expirationDate,
     int? quantity,
-  }) => caller.callServerEndpoint<_i8.Material>(
+  }) => caller.callServerEndpoint<_i11.Material>(
     'material',
     'createMaterial',
     {
@@ -380,10 +455,10 @@ class EndpointMaterial extends _i1.EndpointRef {
   );
 
   /// Lists materials for the current artist profile.
-  _i2.Future<List<_i8.Material>> listMaterials({
-    _i9.MaterialType? type,
+  _i2.Future<List<_i11.Material>> listMaterials({
+    _i12.MaterialType? type,
     String? search,
-  }) => caller.callServerEndpoint<List<_i8.Material>>(
+  }) => caller.callServerEndpoint<List<_i11.Material>>(
     'material',
     'listMaterials',
     {
@@ -393,22 +468,22 @@ class EndpointMaterial extends _i1.EndpointRef {
   );
 
   /// Gets a single material by ID (scoped to artist profile).
-  _i2.Future<_i8.Material?> getMaterial(_i1.UuidValue materialId) =>
-      caller.callServerEndpoint<_i8.Material?>(
+  _i2.Future<_i11.Material?> getMaterial(_i1.UuidValue materialId) =>
+      caller.callServerEndpoint<_i11.Material?>(
         'material',
         'getMaterial',
         {'materialId': materialId},
       );
 
   /// Updates a material (scoped to artist profile).
-  _i2.Future<_i8.Material?> updateMaterial({
+  _i2.Future<_i11.Material?> updateMaterial({
     required _i1.UuidValue materialId,
     required String manufacturer,
     required String supplier,
     required String productName,
     required String batchNumber,
     required DateTime expirationDate,
-  }) => caller.callServerEndpoint<_i8.Material?>(
+  }) => caller.callServerEndpoint<_i11.Material?>(
     'material',
     'updateMaterial',
     {
@@ -430,18 +505,18 @@ class EndpointMaterial extends _i1.EndpointRef {
       );
 
   /// Toggles ink status between inStock and empty.
-  _i2.Future<_i8.Material?> toggleInkStatus(_i1.UuidValue materialId) =>
-      caller.callServerEndpoint<_i8.Material?>(
+  _i2.Future<_i11.Material?> toggleInkStatus(_i1.UuidValue materialId) =>
+      caller.callServerEndpoint<_i11.Material?>(
         'material',
         'toggleInkStatus',
         {'materialId': materialId},
       );
 
   /// Sets needle quantity. Auto-marks empty when quantity reaches 0.
-  _i2.Future<_i8.Material?> setNeedleQuantity({
+  _i2.Future<_i11.Material?> setNeedleQuantity({
     required _i1.UuidValue materialId,
     required int quantity,
-  }) => caller.callServerEndpoint<_i8.Material?>(
+  }) => caller.callServerEndpoint<_i11.Material?>(
     'material',
     'setNeedleQuantity',
     {
@@ -451,8 +526,8 @@ class EndpointMaterial extends _i1.EndpointRef {
   );
 
   /// Lists materials nearing expiration for the current artist profile.
-  _i2.Future<List<_i8.Material>> listExpiringMaterials() =>
-      caller.callServerEndpoint<List<_i8.Material>>(
+  _i2.Future<List<_i11.Material>> listExpiringMaterials() =>
+      caller.callServerEndpoint<List<_i11.Material>>(
         'material',
         'listExpiringMaterials',
         {},
@@ -461,13 +536,13 @@ class EndpointMaterial extends _i1.EndpointRef {
 
 class Modules {
   Modules(Client client) {
-    serverpod_auth_idp = _i3.Caller(client);
-    serverpod_auth_core = _i4.Caller(client);
+    serverpod_auth_idp = _i6.Caller(client);
+    serverpod_auth_core = _i7.Caller(client);
   }
 
-  late final _i3.Caller serverpod_auth_idp;
+  late final _i6.Caller serverpod_auth_idp;
 
-  late final _i4.Caller serverpod_auth_core;
+  late final _i7.Caller serverpod_auth_core;
 }
 
 class Client extends _i1.ServerpodClientShared {
@@ -490,7 +565,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i10.Protocol(),
+         _i13.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -499,6 +574,7 @@ class Client extends _i1.ServerpodClientShared {
          disconnectStreamsOnLostInternetConnection:
              disconnectStreamsOnLostInternetConnection,
        ) {
+    appointment = EndpointAppointment(this);
     artistProfile = EndpointArtistProfile(this);
     emailIdp = EndpointEmailIdp(this);
     jwtRefresh = EndpointJwtRefresh(this);
@@ -507,6 +583,8 @@ class Client extends _i1.ServerpodClientShared {
     material = EndpointMaterial(this);
     modules = Modules(this);
   }
+
+  late final EndpointAppointment appointment;
 
   late final EndpointArtistProfile artistProfile;
 
@@ -524,6 +602,7 @@ class Client extends _i1.ServerpodClientShared {
 
   @override
   Map<String, _i1.EndpointRef> get endpointRefLookup => {
+    'appointment': appointment,
     'artistProfile': artistProfile,
     'emailIdp': emailIdp,
     'jwtRefresh': jwtRefresh,

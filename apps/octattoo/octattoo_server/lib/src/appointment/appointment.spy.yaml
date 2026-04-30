@@ -1,0 +1,34 @@
+### A scheduled session between an artist and a customer.
+class: Appointment
+table: appointment
+
+fields:
+  id: UuidValue?, defaultPersist=random_v7
+  ### The artist profile this appointment belongs to.
+  artistProfileId: UuidValue
+  ### The customer for this appointment.
+  customerId: UuidValue
+  ### The workplace where this appointment takes place.
+  workplaceId: UuidValue
+  ### Tattoo, consultation, or touch-up.
+  type: AppointmentType
+  ### Current lifecycle status.
+  status: AppointmentStatus
+  ### When this appointment is scheduled for.
+  scheduledAt: DateTime
+  ### When the artist started the appointment.
+  startedAt: DateTime?
+  ### When the artist finalized the appointment.
+  finalizedAt: DateTime?
+  ### Free-form notes.
+  notes: String?
+  ### When this appointment was created.
+  createdAt: DateTime?, defaultPersist=now
+
+indexes:
+  appointment_artist_profile_id_idx:
+    fields: artistProfileId
+  appointment_customer_id_idx:
+    fields: customerId
+  appointment_scheduled_at_idx:
+    fields: artistProfileId, scheduledAt

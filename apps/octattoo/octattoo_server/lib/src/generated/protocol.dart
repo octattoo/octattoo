@@ -16,15 +16,25 @@ import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
     as _i3;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i4;
-import 'artist_profile/artist_profile.dart' as _i5;
-import 'customer/create_customer_result.dart' as _i6;
-import 'customer/customer.dart' as _i7;
-import 'greetings/greeting.dart' as _i8;
-import 'inventory/material.dart' as _i9;
-import 'inventory/material_status.dart' as _i10;
-import 'inventory/material_type.dart' as _i11;
-import 'package:octattoo_server/src/generated/customer/customer.dart' as _i12;
-import 'package:octattoo_server/src/generated/inventory/material.dart' as _i13;
+import 'appointment/appointment.dart' as _i5;
+import 'appointment/appointment_material.dart' as _i6;
+import 'appointment/appointment_status.dart' as _i7;
+import 'appointment/appointment_type.dart' as _i8;
+import 'artist_profile/artist_profile.dart' as _i9;
+import 'customer/create_customer_result.dart' as _i10;
+import 'customer/customer.dart' as _i11;
+import 'greetings/greeting.dart' as _i12;
+import 'inventory/material.dart' as _i13;
+import 'inventory/material_status.dart' as _i14;
+import 'inventory/material_type.dart' as _i15;
+import 'package:octattoo_server/src/generated/appointment/appointment.dart'
+    as _i16;
+import 'package:octattoo_server/src/generated/customer/customer.dart' as _i17;
+import 'package:octattoo_server/src/generated/inventory/material.dart' as _i18;
+export 'appointment/appointment.dart';
+export 'appointment/appointment_material.dart';
+export 'appointment/appointment_status.dart';
+export 'appointment/appointment_type.dart';
 export 'artist_profile/artist_profile.dart';
 export 'customer/create_customer_result.dart';
 export 'customer/customer.dart';
@@ -41,6 +51,237 @@ class Protocol extends _i1.SerializationManagerServer {
   static final Protocol _instance = Protocol._();
 
   static final List<_i2.TableDefinition> targetTableDefinitions = [
+    _i2.TableDefinition(
+      name: 'appointment',
+      dartName: 'Appointment',
+      schema: 'public',
+      module: 'octattoo',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid_v7()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'artistProfileId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'customerId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'workplaceId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'type',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:AppointmentType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:AppointmentStatus',
+        ),
+        _i2.ColumnDefinition(
+          name: 'scheduledAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'startedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'finalizedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'notes',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'appointment_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'appointment_artist_profile_id_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'artistProfileId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'appointment_customer_id_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'customerId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'appointment_scheduled_at_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'artistProfileId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'scheduledAt',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
+      name: 'appointment_material',
+      dartName: 'AppointmentMaterial',
+      schema: 'public',
+      module: 'octattoo',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid_v7()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'appointmentId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'materialId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'manufacturer',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'batchNumber',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'linkedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'appointment_material_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'appointment_material_appointment_id_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'appointmentId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'appointment_material_material_id_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'materialId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
     _i2.TableDefinition(
       name: 'artist_profile',
       dartName: 'ArtistProfile',
@@ -376,59 +617,90 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
 
-    if (t == _i5.ArtistProfile) {
-      return _i5.ArtistProfile.fromJson(data) as T;
+    if (t == _i5.Appointment) {
+      return _i5.Appointment.fromJson(data) as T;
     }
-    if (t == _i6.CreateCustomerResult) {
-      return _i6.CreateCustomerResult.fromJson(data) as T;
+    if (t == _i6.AppointmentMaterial) {
+      return _i6.AppointmentMaterial.fromJson(data) as T;
     }
-    if (t == _i7.Customer) {
-      return _i7.Customer.fromJson(data) as T;
+    if (t == _i7.AppointmentStatus) {
+      return _i7.AppointmentStatus.fromJson(data) as T;
     }
-    if (t == _i8.Greeting) {
-      return _i8.Greeting.fromJson(data) as T;
+    if (t == _i8.AppointmentType) {
+      return _i8.AppointmentType.fromJson(data) as T;
     }
-    if (t == _i9.Material) {
-      return _i9.Material.fromJson(data) as T;
+    if (t == _i9.ArtistProfile) {
+      return _i9.ArtistProfile.fromJson(data) as T;
     }
-    if (t == _i10.MaterialStatus) {
-      return _i10.MaterialStatus.fromJson(data) as T;
+    if (t == _i10.CreateCustomerResult) {
+      return _i10.CreateCustomerResult.fromJson(data) as T;
     }
-    if (t == _i11.MaterialType) {
-      return _i11.MaterialType.fromJson(data) as T;
+    if (t == _i11.Customer) {
+      return _i11.Customer.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i5.ArtistProfile?>()) {
-      return (data != null ? _i5.ArtistProfile.fromJson(data) : null) as T;
+    if (t == _i12.Greeting) {
+      return _i12.Greeting.fromJson(data) as T;
     }
-    if (t == _i1.getType<_i6.CreateCustomerResult?>()) {
-      return (data != null ? _i6.CreateCustomerResult.fromJson(data) : null)
+    if (t == _i13.Material) {
+      return _i13.Material.fromJson(data) as T;
+    }
+    if (t == _i14.MaterialStatus) {
+      return _i14.MaterialStatus.fromJson(data) as T;
+    }
+    if (t == _i15.MaterialType) {
+      return _i15.MaterialType.fromJson(data) as T;
+    }
+    if (t == _i1.getType<_i5.Appointment?>()) {
+      return (data != null ? _i5.Appointment.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i6.AppointmentMaterial?>()) {
+      return (data != null ? _i6.AppointmentMaterial.fromJson(data) : null)
           as T;
     }
-    if (t == _i1.getType<_i7.Customer?>()) {
-      return (data != null ? _i7.Customer.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i7.AppointmentStatus?>()) {
+      return (data != null ? _i7.AppointmentStatus.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i8.Greeting?>()) {
-      return (data != null ? _i8.Greeting.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i8.AppointmentType?>()) {
+      return (data != null ? _i8.AppointmentType.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i9.Material?>()) {
-      return (data != null ? _i9.Material.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i9.ArtistProfile?>()) {
+      return (data != null ? _i9.ArtistProfile.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i10.MaterialStatus?>()) {
-      return (data != null ? _i10.MaterialStatus.fromJson(data) : null) as T;
-    }
-    if (t == _i1.getType<_i11.MaterialType?>()) {
-      return (data != null ? _i11.MaterialType.fromJson(data) : null) as T;
-    }
-    if (t == List<_i7.Customer>) {
-      return (data as List).map((e) => deserialize<_i7.Customer>(e)).toList()
+    if (t == _i1.getType<_i10.CreateCustomerResult?>()) {
+      return (data != null ? _i10.CreateCustomerResult.fromJson(data) : null)
           as T;
     }
-    if (t == List<_i12.Customer>) {
-      return (data as List).map((e) => deserialize<_i12.Customer>(e)).toList()
+    if (t == _i1.getType<_i11.Customer?>()) {
+      return (data != null ? _i11.Customer.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i12.Greeting?>()) {
+      return (data != null ? _i12.Greeting.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i13.Material?>()) {
+      return (data != null ? _i13.Material.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i14.MaterialStatus?>()) {
+      return (data != null ? _i14.MaterialStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i15.MaterialType?>()) {
+      return (data != null ? _i15.MaterialType.fromJson(data) : null) as T;
+    }
+    if (t == List<_i11.Customer>) {
+      return (data as List).map((e) => deserialize<_i11.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i13.Material>) {
-      return (data as List).map((e) => deserialize<_i13.Material>(e)).toList()
+    if (t == List<_i16.Appointment>) {
+      return (data as List)
+              .map((e) => deserialize<_i16.Appointment>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i17.Customer>) {
+      return (data as List).map((e) => deserialize<_i17.Customer>(e)).toList()
+          as T;
+    }
+    if (t == List<_i18.Material>) {
+      return (data as List).map((e) => deserialize<_i18.Material>(e)).toList()
           as T;
     }
     try {
@@ -445,13 +717,17 @@ class Protocol extends _i1.SerializationManagerServer {
 
   static String? getClassNameForType(Type type) {
     return switch (type) {
-      _i5.ArtistProfile => 'ArtistProfile',
-      _i6.CreateCustomerResult => 'CreateCustomerResult',
-      _i7.Customer => 'Customer',
-      _i8.Greeting => 'Greeting',
-      _i9.Material => 'Material',
-      _i10.MaterialStatus => 'MaterialStatus',
-      _i11.MaterialType => 'MaterialType',
+      _i5.Appointment => 'Appointment',
+      _i6.AppointmentMaterial => 'AppointmentMaterial',
+      _i7.AppointmentStatus => 'AppointmentStatus',
+      _i8.AppointmentType => 'AppointmentType',
+      _i9.ArtistProfile => 'ArtistProfile',
+      _i10.CreateCustomerResult => 'CreateCustomerResult',
+      _i11.Customer => 'Customer',
+      _i12.Greeting => 'Greeting',
+      _i13.Material => 'Material',
+      _i14.MaterialStatus => 'MaterialStatus',
+      _i15.MaterialType => 'MaterialType',
       _ => null,
     };
   }
@@ -466,19 +742,27 @@ class Protocol extends _i1.SerializationManagerServer {
     }
 
     switch (data) {
-      case _i5.ArtistProfile():
+      case _i5.Appointment():
+        return 'Appointment';
+      case _i6.AppointmentMaterial():
+        return 'AppointmentMaterial';
+      case _i7.AppointmentStatus():
+        return 'AppointmentStatus';
+      case _i8.AppointmentType():
+        return 'AppointmentType';
+      case _i9.ArtistProfile():
         return 'ArtistProfile';
-      case _i6.CreateCustomerResult():
+      case _i10.CreateCustomerResult():
         return 'CreateCustomerResult';
-      case _i7.Customer():
+      case _i11.Customer():
         return 'Customer';
-      case _i8.Greeting():
+      case _i12.Greeting():
         return 'Greeting';
-      case _i9.Material():
+      case _i13.Material():
         return 'Material';
-      case _i10.MaterialStatus():
+      case _i14.MaterialStatus():
         return 'MaterialStatus';
-      case _i11.MaterialType():
+      case _i15.MaterialType():
         return 'MaterialType';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -502,26 +786,38 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName is! String) {
       return super.deserializeByClassName(data);
     }
+    if (dataClassName == 'Appointment') {
+      return deserialize<_i5.Appointment>(data['data']);
+    }
+    if (dataClassName == 'AppointmentMaterial') {
+      return deserialize<_i6.AppointmentMaterial>(data['data']);
+    }
+    if (dataClassName == 'AppointmentStatus') {
+      return deserialize<_i7.AppointmentStatus>(data['data']);
+    }
+    if (dataClassName == 'AppointmentType') {
+      return deserialize<_i8.AppointmentType>(data['data']);
+    }
     if (dataClassName == 'ArtistProfile') {
-      return deserialize<_i5.ArtistProfile>(data['data']);
+      return deserialize<_i9.ArtistProfile>(data['data']);
     }
     if (dataClassName == 'CreateCustomerResult') {
-      return deserialize<_i6.CreateCustomerResult>(data['data']);
+      return deserialize<_i10.CreateCustomerResult>(data['data']);
     }
     if (dataClassName == 'Customer') {
-      return deserialize<_i7.Customer>(data['data']);
+      return deserialize<_i11.Customer>(data['data']);
     }
     if (dataClassName == 'Greeting') {
-      return deserialize<_i8.Greeting>(data['data']);
+      return deserialize<_i12.Greeting>(data['data']);
     }
     if (dataClassName == 'Material') {
-      return deserialize<_i9.Material>(data['data']);
+      return deserialize<_i13.Material>(data['data']);
     }
     if (dataClassName == 'MaterialStatus') {
-      return deserialize<_i10.MaterialStatus>(data['data']);
+      return deserialize<_i14.MaterialStatus>(data['data']);
     }
     if (dataClassName == 'MaterialType') {
-      return deserialize<_i11.MaterialType>(data['data']);
+      return deserialize<_i15.MaterialType>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -559,12 +855,16 @@ class Protocol extends _i1.SerializationManagerServer {
       }
     }
     switch (t) {
-      case _i5.ArtistProfile:
-        return _i5.ArtistProfile.t;
-      case _i7.Customer:
-        return _i7.Customer.t;
-      case _i9.Material:
-        return _i9.Material.t;
+      case _i5.Appointment:
+        return _i5.Appointment.t;
+      case _i6.AppointmentMaterial:
+        return _i6.AppointmentMaterial.t;
+      case _i9.ArtistProfile:
+        return _i9.ArtistProfile.t;
+      case _i11.Customer:
+        return _i11.Customer.t;
+      case _i13.Material:
+        return _i13.Material.t;
     }
     return null;
   }
