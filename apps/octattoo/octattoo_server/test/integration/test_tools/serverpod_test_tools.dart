@@ -29,10 +29,14 @@ import 'package:octattoo_server/src/generated/greetings/greeting.dart' as _i10;
 import 'package:octattoo_server/src/generated/inventory/material.dart' as _i11;
 import 'package:octattoo_server/src/generated/inventory/material_type.dart'
     as _i12;
-import 'package:octattoo_server/src/generated/storage/stored_file.dart' as _i13;
-import 'dart:typed_data' as _i14;
+import 'package:octattoo_server/src/generated/secure_link/secure_link.dart'
+    as _i13;
+import 'package:octattoo_server/src/generated/secure_link/secure_link_type.dart'
+    as _i14;
+import 'package:octattoo_server/src/generated/storage/stored_file.dart' as _i15;
+import 'dart:typed_data' as _i16;
 import 'package:octattoo_server/src/generated/traceability/session_record.dart'
-    as _i15;
+    as _i17;
 import 'package:octattoo_server/src/generated/protocol.dart';
 import 'package:octattoo_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -161,6 +165,8 @@ class TestEndpoints {
 
   late final _MaterialEndpoint material;
 
+  late final _SecureLinkEndpoint secureLink;
+
   late final _StorageEndpoint storage;
 
   late final _SessionRecordEndpoint sessionRecord;
@@ -198,6 +204,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     material = _MaterialEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    secureLink = _SecureLinkEndpoint(
       endpoints,
       serializationManager,
     );
@@ -1270,6 +1280,116 @@ class _MaterialEndpoint {
   }
 }
 
+class _SecureLinkEndpoint {
+  _SecureLinkEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i13.SecureLink> createLink(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required _i14.SecureLinkType type,
+    required _i2.UuidValue targetId,
+    int? expiresInDays,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'secureLink',
+            method: 'createLink',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'secureLink',
+          methodName: 'createLink',
+          parameters: _i1.testObjectToJson({
+            'type': type,
+            'targetId': targetId,
+            'expiresInDays': expiresInDays,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i13.SecureLink>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i13.SecureLink?> resolveLink(
+    _i1.TestSessionBuilder sessionBuilder,
+    String token,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'secureLink',
+            method: 'resolveLink',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'secureLink',
+          methodName: 'resolveLink',
+          parameters: _i1.testObjectToJson({'token': token}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i13.SecureLink?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i13.SecureLink?> renewLink(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue linkId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'secureLink',
+            method: 'renewLink',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'secureLink',
+          methodName: 'renewLink',
+          parameters: _i1.testObjectToJson({'linkId': linkId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i13.SecureLink?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
 class _StorageEndpoint {
   _StorageEndpoint(
     this._endpointDispatch,
@@ -1280,11 +1400,11 @@ class _StorageEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i13.StoredFile> uploadFile(
+  _i3.Future<_i15.StoredFile> uploadFile(
     _i1.TestSessionBuilder sessionBuilder, {
     required String fileName,
     required String mimeType,
-    required _i14.ByteData bytes,
+    required _i16.ByteData bytes,
   }) async {
     return _i1.callAwaitableFunctionAndHandleExceptions(() async {
       var _localUniqueSession =
@@ -1309,7 +1429,7 @@ class _StorageEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i13.StoredFile>);
+                as _i3.Future<_i15.StoredFile>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1317,7 +1437,7 @@ class _StorageEndpoint {
     });
   }
 
-  _i3.Future<_i13.StoredFile?> getFile(
+  _i3.Future<_i15.StoredFile?> getFile(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue fileId,
   ) async {
@@ -1340,7 +1460,7 @@ class _StorageEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i13.StoredFile?>);
+                as _i3.Future<_i15.StoredFile?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1484,7 +1604,7 @@ class _SessionRecordEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i15.SessionRecord?> getByAppointmentId(
+  _i3.Future<_i17.SessionRecord?> getByAppointmentId(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue appointmentId,
   ) async {
@@ -1507,7 +1627,7 @@ class _SessionRecordEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i15.SessionRecord?>);
+                as _i3.Future<_i17.SessionRecord?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

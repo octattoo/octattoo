@@ -1,0 +1,5 @@
+enum: SecureLinkStatus
+values:
+  - active
+  - expired
+  - consumed

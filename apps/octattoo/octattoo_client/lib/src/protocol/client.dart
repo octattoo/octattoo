@@ -29,11 +29,15 @@ import 'package:octattoo_client/src/protocol/greetings/greeting.dart' as _i10;
 import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i11;
 import 'package:octattoo_client/src/protocol/inventory/material_type.dart'
     as _i12;
-import 'package:octattoo_client/src/protocol/storage/stored_file.dart' as _i13;
-import 'dart:typed_data' as _i14;
+import 'package:octattoo_client/src/protocol/secure_link/secure_link.dart'
+    as _i13;
+import 'package:octattoo_client/src/protocol/secure_link/secure_link_type.dart'
+    as _i14;
+import 'package:octattoo_client/src/protocol/storage/stored_file.dart' as _i15;
+import 'dart:typed_data' as _i16;
 import 'package:octattoo_client/src/protocol/traceability/session_record.dart'
-    as _i15;
-import 'protocol.dart' as _i16;
+    as _i17;
+import 'protocol.dart' as _i18;
 
 /// {@category Endpoint}
 class EndpointAppointment extends _i1.EndpointRef {
@@ -539,6 +543,45 @@ class EndpointMaterial extends _i1.EndpointRef {
 }
 
 /// {@category Endpoint}
+class EndpointSecureLink extends _i1.EndpointRef {
+  EndpointSecureLink(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'secureLink';
+
+  /// Creates a new secure link with a unique token.
+  _i2.Future<_i13.SecureLink> createLink({
+    required _i14.SecureLinkType type,
+    required _i1.UuidValue targetId,
+    int? expiresInDays,
+  }) => caller.callServerEndpoint<_i13.SecureLink>(
+    'secureLink',
+    'createLink',
+    {
+      'type': type,
+      'targetId': targetId,
+      'expiresInDays': expiresInDays,
+    },
+  );
+
+  /// Resolves a token to its link data. Returns null if not found or expired.
+  _i2.Future<_i13.SecureLink?> resolveLink(String token) =>
+      caller.callServerEndpoint<_i13.SecureLink?>(
+        'secureLink',
+        'resolveLink',
+        {'token': token},
+      );
+
+  /// Renews an expired link, extending its expiration by the type default.
+  _i2.Future<_i13.SecureLink?> renewLink(_i1.UuidValue linkId) =>
+      caller.callServerEndpoint<_i13.SecureLink?>(
+        'secureLink',
+        'renewLink',
+        {'linkId': linkId},
+      );
+}
+
+/// {@category Endpoint}
 class EndpointStorage extends _i1.EndpointRef {
   EndpointStorage(_i1.EndpointCaller caller) : super(caller);
 
@@ -546,11 +589,11 @@ class EndpointStorage extends _i1.EndpointRef {
   String get name => 'storage';
 
   /// Uploads a file and returns the stored file metadata.
-  _i2.Future<_i13.StoredFile> uploadFile({
+  _i2.Future<_i15.StoredFile> uploadFile({
     required String fileName,
     required String mimeType,
-    required _i14.ByteData bytes,
-  }) => caller.callServerEndpoint<_i13.StoredFile>(
+    required _i16.ByteData bytes,
+  }) => caller.callServerEndpoint<_i15.StoredFile>(
     'storage',
     'uploadFile',
     {
@@ -561,8 +604,8 @@ class EndpointStorage extends _i1.EndpointRef {
   );
 
   /// Retrieves file metadata by ID (scoped to artist profile).
-  _i2.Future<_i13.StoredFile?> getFile(_i1.UuidValue fileId) =>
-      caller.callServerEndpoint<_i13.StoredFile?>(
+  _i2.Future<_i15.StoredFile?> getFile(_i1.UuidValue fileId) =>
+      caller.callServerEndpoint<_i15.StoredFile?>(
         'storage',
         'getFile',
         {'fileId': fileId},
@@ -613,9 +656,9 @@ class EndpointSessionRecord extends _i1.EndpointRef {
   String get name => 'sessionRecord';
 
   /// Returns the SessionRecord for a given appointment, or null if not sealed.
-  _i2.Future<_i15.SessionRecord?> getByAppointmentId(
+  _i2.Future<_i17.SessionRecord?> getByAppointmentId(
     _i1.UuidValue appointmentId,
-  ) => caller.callServerEndpoint<_i15.SessionRecord?>(
+  ) => caller.callServerEndpoint<_i17.SessionRecord?>(
     'sessionRecord',
     'getByAppointmentId',
     {'appointmentId': appointmentId},
@@ -653,7 +696,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i16.Protocol(),
+         _i18.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -669,6 +712,7 @@ class Client extends _i1.ServerpodClientShared {
     customer = EndpointCustomer(this);
     greeting = EndpointGreeting(this);
     material = EndpointMaterial(this);
+    secureLink = EndpointSecureLink(this);
     storage = EndpointStorage(this);
     sessionRecord = EndpointSessionRecord(this);
     modules = Modules(this);
@@ -688,6 +732,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointMaterial material;
 
+  late final EndpointSecureLink secureLink;
+
   late final EndpointStorage storage;
 
   late final EndpointSessionRecord sessionRecord;
@@ -703,6 +749,7 @@ class Client extends _i1.ServerpodClientShared {
     'customer': customer,
     'greeting': greeting,
     'material': material,
+    'secureLink': secureLink,
     'storage': storage,
     'sessionRecord': sessionRecord,
   };

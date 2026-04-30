@@ -34,6 +34,10 @@ material:
   - toggleInkStatus:
   - setNeedleQuantity:
   - listExpiringMaterials:
+secureLink:
+  - createLink:
+  - resolveLink:
+  - renewLink:
 storage:
   - uploadFile:
   - getFile:

@@ -1,0 +1,7 @@
+enum: SecureLinkType
+values:
+  - quote
+  - consent
+  - booking
+  - aftercare
+  - invoice
