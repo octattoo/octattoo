@@ -18,14 +18,16 @@ import '../auth/jwt_refresh_endpoint.dart' as _i5;
 import '../customer/customer_endpoint.dart' as _i6;
 import '../greetings/greeting_endpoint.dart' as _i7;
 import '../inventory/material_endpoint.dart' as _i8;
+import '../storage/storage_endpoint.dart' as _i9;
 import 'package:octattoo_server/src/generated/appointment/appointment_type.dart'
-    as _i9;
-import 'package:octattoo_server/src/generated/inventory/material_type.dart'
     as _i10;
-import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+import 'package:octattoo_server/src/generated/inventory/material_type.dart'
     as _i11;
+import 'dart:typed_data' as _i12;
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+    as _i13;
 import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
-    as _i12;
+    as _i14;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -73,6 +75,12 @@ class Endpoints extends _i1.EndpointDispatch {
           'material',
           null,
         ),
+      'storage': _i9.StorageEndpoint()
+        ..initialize(
+          server,
+          'storage',
+          null,
+        ),
     };
     connectors['appointment'] = _i1.EndpointConnector(
       name: 'appointment',
@@ -83,7 +91,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i9.AppointmentType>(),
+              type: _i1.getType<_i10.AppointmentType>(),
               nullable: false,
             ),
             'customerId': _i1.ParameterDescription(
@@ -593,7 +601,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i10.MaterialType>(),
+              type: _i1.getType<_i11.MaterialType>(),
               nullable: false,
             ),
             'manufacturer': _i1.ParameterDescription(
@@ -648,7 +656,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i10.MaterialType?>(),
+              type: _i1.getType<_i11.MaterialType?>(),
               nullable: true,
             ),
             'search': _i1.ParameterDescription(
@@ -811,9 +819,137 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i11.Endpoints()
+    connectors['storage'] = _i1.EndpointConnector(
+      name: 'storage',
+      endpoint: endpoints['storage']!,
+      methodConnectors: {
+        'uploadFile': _i1.MethodConnector(
+          name: 'uploadFile',
+          params: {
+            'fileName': _i1.ParameterDescription(
+              name: 'fileName',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'mimeType': _i1.ParameterDescription(
+              name: 'mimeType',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'bytes': _i1.ParameterDescription(
+              name: 'bytes',
+              type: _i1.getType<_i12.ByteData>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['storage'] as _i9.StorageEndpoint).uploadFile(
+                    session,
+                    fileName: params['fileName'],
+                    mimeType: params['mimeType'],
+                    bytes: params['bytes'],
+                  ),
+        ),
+        'getFile': _i1.MethodConnector(
+          name: 'getFile',
+          params: {
+            'fileId': _i1.ParameterDescription(
+              name: 'fileId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['storage'] as _i9.StorageEndpoint).getFile(
+                session,
+                params['fileId'],
+              ),
+        ),
+        'deleteFile': _i1.MethodConnector(
+          name: 'deleteFile',
+          params: {
+            'fileId': _i1.ParameterDescription(
+              name: 'fileId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['storage'] as _i9.StorageEndpoint).deleteFile(
+                    session,
+                    params['fileId'],
+                  ),
+        ),
+        'getVariantUrl': _i1.MethodConnector(
+          name: 'getVariantUrl',
+          params: {
+            'fileId': _i1.ParameterDescription(
+              name: 'fileId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'variant': _i1.ParameterDescription(
+              name: 'variant',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['storage'] as _i9.StorageEndpoint).getVariantUrl(
+                    session,
+                    fileId: params['fileId'],
+                    variant: params['variant'],
+                  ),
+        ),
+        'getStorageUsage': _i1.MethodConnector(
+          name: 'getStorageUsage',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['storage'] as _i9.StorageEndpoint)
+                  .getStorageUsage(session),
+        ),
+        'setStorageQuota': _i1.MethodConnector(
+          name: 'setStorageQuota',
+          params: {
+            'quotaBytes': _i1.ParameterDescription(
+              name: 'quotaBytes',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['storage'] as _i9.StorageEndpoint).setStorageQuota(
+                    session,
+                    params['quotaBytes'],
+                  ),
+        ),
+      },
+    );
+    modules['serverpod_auth_idp'] = _i13.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i12.Endpoints()
+    modules['serverpod_auth_core'] = _i14.Endpoints()
       ..initializeEndpoints(server);
   }
 }

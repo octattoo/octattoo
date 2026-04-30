@@ -1,0 +1,25 @@
+### A file stored in object storage (original upload).
+class: StoredFile
+table: stored_file
+
+fields:
+  id: UuidValue?, defaultPersist=random_v7
+  ### The artist profile that owns this file.
+  artistProfileId: UuidValue
+  ### Original filename as uploaded by the user.
+  fileName: String
+  ### MIME type (e.g. image/png).
+  mimeType: String
+  ### Size in bytes of the original file.
+  sizeBytes: int
+  ### S3 object key (e.g. originals/{artistProfileId}/{uuid}.{ext}).
+  storagePath: String
+  ### When this file was uploaded.
+  createdAt: DateTime?, defaultPersist=now
+
+indexes:
+  stored_file_artist_profile_id_idx:
+    fields: artistProfileId
+  stored_file_storage_path_idx:
+    fields: storagePath
+    unique: true

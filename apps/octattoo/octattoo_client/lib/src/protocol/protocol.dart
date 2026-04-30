@@ -22,14 +22,16 @@ import 'greetings/greeting.dart' as _i9;
 import 'inventory/material.dart' as _i10;
 import 'inventory/material_status.dart' as _i11;
 import 'inventory/material_type.dart' as _i12;
+import 'storage/storage_quota_exceeded_exception.dart' as _i13;
+import 'storage/stored_file.dart' as _i14;
 import 'package:octattoo_client/src/protocol/appointment/appointment.dart'
-    as _i13;
-import 'package:octattoo_client/src/protocol/customer/customer.dart' as _i14;
-import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i15;
+    as _i15;
+import 'package:octattoo_client/src/protocol/customer/customer.dart' as _i16;
+import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i17;
 import 'package:serverpod_auth_idp_client/serverpod_auth_idp_client.dart'
-    as _i16;
+    as _i18;
 import 'package:serverpod_auth_core_client/serverpod_auth_core_client.dart'
-    as _i17;
+    as _i19;
 export 'appointment/appointment.dart';
 export 'appointment/appointment_material.dart';
 export 'appointment/appointment_status.dart';
@@ -41,6 +43,8 @@ export 'greetings/greeting.dart';
 export 'inventory/material.dart';
 export 'inventory/material_status.dart';
 export 'inventory/material_type.dart';
+export 'storage/storage_quota_exceeded_exception.dart';
+export 'storage/stored_file.dart';
 export 'client.dart';
 
 class Protocol extends _i1.SerializationManager {
@@ -110,6 +114,12 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i12.MaterialType) {
       return _i12.MaterialType.fromJson(data) as T;
     }
+    if (t == _i13.StorageQuotaExceededException) {
+      return _i13.StorageQuotaExceededException.fromJson(data) as T;
+    }
+    if (t == _i14.StoredFile) {
+      return _i14.StoredFile.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i2.Appointment?>()) {
       return (data != null ? _i2.Appointment.fromJson(data) : null) as T;
     }
@@ -145,29 +155,38 @@ class Protocol extends _i1.SerializationManager {
     if (t == _i1.getType<_i12.MaterialType?>()) {
       return (data != null ? _i12.MaterialType.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i13.StorageQuotaExceededException?>()) {
+      return (data != null
+              ? _i13.StorageQuotaExceededException.fromJson(data)
+              : null)
+          as T;
+    }
+    if (t == _i1.getType<_i14.StoredFile?>()) {
+      return (data != null ? _i14.StoredFile.fromJson(data) : null) as T;
+    }
     if (t == List<_i8.Customer>) {
       return (data as List).map((e) => deserialize<_i8.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i13.Appointment>) {
+    if (t == List<_i15.Appointment>) {
       return (data as List)
-              .map((e) => deserialize<_i13.Appointment>(e))
+              .map((e) => deserialize<_i15.Appointment>(e))
               .toList()
           as T;
     }
-    if (t == List<_i14.Customer>) {
-      return (data as List).map((e) => deserialize<_i14.Customer>(e)).toList()
+    if (t == List<_i16.Customer>) {
+      return (data as List).map((e) => deserialize<_i16.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i15.Material>) {
-      return (data as List).map((e) => deserialize<_i15.Material>(e)).toList()
+    if (t == List<_i17.Material>) {
+      return (data as List).map((e) => deserialize<_i17.Material>(e)).toList()
           as T;
     }
     try {
-      return _i16.Protocol().deserialize<T>(data, t);
+      return _i18.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     try {
-      return _i17.Protocol().deserialize<T>(data, t);
+      return _i19.Protocol().deserialize<T>(data, t);
     } on _i1.DeserializationTypeNotFoundException catch (_) {}
     return super.deserialize<T>(data, t);
   }
@@ -185,6 +204,8 @@ class Protocol extends _i1.SerializationManager {
       _i10.Material => 'Material',
       _i11.MaterialStatus => 'MaterialStatus',
       _i12.MaterialType => 'MaterialType',
+      _i13.StorageQuotaExceededException => 'StorageQuotaExceededException',
+      _i14.StoredFile => 'StoredFile',
       _ => null,
     };
   }
@@ -221,12 +242,16 @@ class Protocol extends _i1.SerializationManager {
         return 'MaterialStatus';
       case _i12.MaterialType():
         return 'MaterialType';
+      case _i13.StorageQuotaExceededException():
+        return 'StorageQuotaExceededException';
+      case _i14.StoredFile():
+        return 'StoredFile';
     }
-    className = _i16.Protocol().getClassNameForObject(data);
+    className = _i18.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_idp.$className';
     }
-    className = _i17.Protocol().getClassNameForObject(data);
+    className = _i19.Protocol().getClassNameForObject(data);
     if (className != null) {
       return 'serverpod_auth_core.$className';
     }
@@ -272,13 +297,19 @@ class Protocol extends _i1.SerializationManager {
     if (dataClassName == 'MaterialType') {
       return deserialize<_i12.MaterialType>(data['data']);
     }
+    if (dataClassName == 'StorageQuotaExceededException') {
+      return deserialize<_i13.StorageQuotaExceededException>(data['data']);
+    }
+    if (dataClassName == 'StoredFile') {
+      return deserialize<_i14.StoredFile>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod_auth_idp.')) {
       data['className'] = dataClassName.substring(19);
-      return _i16.Protocol().deserializeByClassName(data);
+      return _i18.Protocol().deserializeByClassName(data);
     }
     if (dataClassName.startsWith('serverpod_auth_core.')) {
       data['className'] = dataClassName.substring(20);
-      return _i17.Protocol().deserializeByClassName(data);
+      return _i19.Protocol().deserializeByClassName(data);
     }
     return super.deserializeByClassName(data);
   }
@@ -293,10 +324,10 @@ class Protocol extends _i1.SerializationManager {
       return null;
     }
     try {
-      return _i16.Protocol().mapRecordToJson(record);
+      return _i18.Protocol().mapRecordToJson(record);
     } catch (_) {}
     try {
-      return _i17.Protocol().mapRecordToJson(record);
+      return _i19.Protocol().mapRecordToJson(record);
     } catch (_) {}
     throw Exception('Unsupported record type ${record.runtimeType}');
   }

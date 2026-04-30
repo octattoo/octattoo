@@ -1,0 +1,8 @@
+### Thrown when an upload would exceed the artist's storage quota.
+exception: StorageQuotaExceededException
+
+fields:
+  ### Current usage in bytes.
+  currentUsage: int
+  ### Maximum allowed in bytes.
+  maxAllowed: int

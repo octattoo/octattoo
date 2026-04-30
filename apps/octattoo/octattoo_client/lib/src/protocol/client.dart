@@ -29,7 +29,9 @@ import 'package:octattoo_client/src/protocol/greetings/greeting.dart' as _i10;
 import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i11;
 import 'package:octattoo_client/src/protocol/inventory/material_type.dart'
     as _i12;
-import 'protocol.dart' as _i13;
+import 'package:octattoo_client/src/protocol/storage/stored_file.dart' as _i13;
+import 'dart:typed_data' as _i14;
+import 'protocol.dart' as _i15;
 
 /// {@category Endpoint}
 class EndpointAppointment extends _i1.EndpointRef {
@@ -534,6 +536,73 @@ class EndpointMaterial extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointStorage extends _i1.EndpointRef {
+  EndpointStorage(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'storage';
+
+  /// Uploads a file and returns the stored file metadata.
+  _i2.Future<_i13.StoredFile> uploadFile({
+    required String fileName,
+    required String mimeType,
+    required _i14.ByteData bytes,
+  }) => caller.callServerEndpoint<_i13.StoredFile>(
+    'storage',
+    'uploadFile',
+    {
+      'fileName': fileName,
+      'mimeType': mimeType,
+      'bytes': bytes,
+    },
+  );
+
+  /// Retrieves file metadata by ID (scoped to artist profile).
+  _i2.Future<_i13.StoredFile?> getFile(_i1.UuidValue fileId) =>
+      caller.callServerEndpoint<_i13.StoredFile?>(
+        'storage',
+        'getFile',
+        {'fileId': fileId},
+      );
+
+  /// Deletes a file and all its variants.
+  _i2.Future<bool> deleteFile(_i1.UuidValue fileId) =>
+      caller.callServerEndpoint<bool>(
+        'storage',
+        'deleteFile',
+        {'fileId': fileId},
+      );
+
+  /// Returns a URL for the requested variant, generating it if needed.
+  _i2.Future<String> getVariantUrl({
+    required _i1.UuidValue fileId,
+    required String variant,
+  }) => caller.callServerEndpoint<String>(
+    'storage',
+    'getVariantUrl',
+    {
+      'fileId': fileId,
+      'variant': variant,
+    },
+  );
+
+  /// Returns total storage usage in bytes for the current profile.
+  _i2.Future<int> getStorageUsage() => caller.callServerEndpoint<int>(
+    'storage',
+    'getStorageUsage',
+    {},
+  );
+
+  /// Sets the storage quota for the current profile (used in tests).
+  _i2.Future<void> setStorageQuota(int quotaBytes) =>
+      caller.callServerEndpoint<void>(
+        'storage',
+        'setStorageQuota',
+        {'quotaBytes': quotaBytes},
+      );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i6.Caller(client);
@@ -565,7 +634,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i13.Protocol(),
+         _i15.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -581,6 +650,7 @@ class Client extends _i1.ServerpodClientShared {
     customer = EndpointCustomer(this);
     greeting = EndpointGreeting(this);
     material = EndpointMaterial(this);
+    storage = EndpointStorage(this);
     modules = Modules(this);
   }
 
@@ -598,6 +668,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointMaterial material;
 
+  late final EndpointStorage storage;
+
   late final Modules modules;
 
   @override
@@ -609,6 +681,7 @@ class Client extends _i1.ServerpodClientShared {
     'customer': customer,
     'greeting': greeting,
     'material': material,
+    'storage': storage,
   };
 
   @override

@@ -27,10 +27,12 @@ import 'greetings/greeting.dart' as _i12;
 import 'inventory/material.dart' as _i13;
 import 'inventory/material_status.dart' as _i14;
 import 'inventory/material_type.dart' as _i15;
+import 'storage/storage_quota_exceeded_exception.dart' as _i16;
+import 'storage/stored_file.dart' as _i17;
 import 'package:octattoo_server/src/generated/appointment/appointment.dart'
-    as _i16;
-import 'package:octattoo_server/src/generated/customer/customer.dart' as _i17;
-import 'package:octattoo_server/src/generated/inventory/material.dart' as _i18;
+    as _i18;
+import 'package:octattoo_server/src/generated/customer/customer.dart' as _i19;
+import 'package:octattoo_server/src/generated/inventory/material.dart' as _i20;
 export 'appointment/appointment.dart';
 export 'appointment/appointment_material.dart';
 export 'appointment/appointment_status.dart';
@@ -42,6 +44,8 @@ export 'greetings/greeting.dart';
 export 'inventory/material.dart';
 export 'inventory/material_status.dart';
 export 'inventory/material_type.dart';
+export 'storage/storage_quota_exceeded_exception.dart';
+export 'storage/stored_file.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -314,6 +318,13 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'int',
           columnDefault: '30',
         ),
+        _i2.ColumnDefinition(
+          name: 'storageQuotaBytes',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '524288000',
+        ),
       ],
       foreignKeys: [],
       indexes: [
@@ -585,6 +596,101 @@ class Protocol extends _i1.SerializationManagerServer {
       ],
       managed: true,
     ),
+    _i2.TableDefinition(
+      name: 'stored_file',
+      dartName: 'StoredFile',
+      schema: 'public',
+      module: 'octattoo',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid_v7()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'artistProfileId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'fileName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'mimeType',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'sizeBytes',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'storagePath',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'stored_file_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'stored_file_artist_profile_id_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'artistProfileId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'stored_file_storage_path_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'storagePath',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
     ..._i3.Protocol.targetTableDefinitions,
     ..._i4.Protocol.targetTableDefinitions,
     ..._i2.Protocol.targetTableDefinitions,
@@ -650,6 +756,12 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i15.MaterialType) {
       return _i15.MaterialType.fromJson(data) as T;
     }
+    if (t == _i16.StorageQuotaExceededException) {
+      return _i16.StorageQuotaExceededException.fromJson(data) as T;
+    }
+    if (t == _i17.StoredFile) {
+      return _i17.StoredFile.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i5.Appointment?>()) {
       return (data != null ? _i5.Appointment.fromJson(data) : null) as T;
     }
@@ -685,22 +797,31 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i15.MaterialType?>()) {
       return (data != null ? _i15.MaterialType.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i16.StorageQuotaExceededException?>()) {
+      return (data != null
+              ? _i16.StorageQuotaExceededException.fromJson(data)
+              : null)
+          as T;
+    }
+    if (t == _i1.getType<_i17.StoredFile?>()) {
+      return (data != null ? _i17.StoredFile.fromJson(data) : null) as T;
+    }
     if (t == List<_i11.Customer>) {
       return (data as List).map((e) => deserialize<_i11.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i16.Appointment>) {
+    if (t == List<_i18.Appointment>) {
       return (data as List)
-              .map((e) => deserialize<_i16.Appointment>(e))
+              .map((e) => deserialize<_i18.Appointment>(e))
               .toList()
           as T;
     }
-    if (t == List<_i17.Customer>) {
-      return (data as List).map((e) => deserialize<_i17.Customer>(e)).toList()
+    if (t == List<_i19.Customer>) {
+      return (data as List).map((e) => deserialize<_i19.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i18.Material>) {
-      return (data as List).map((e) => deserialize<_i18.Material>(e)).toList()
+    if (t == List<_i20.Material>) {
+      return (data as List).map((e) => deserialize<_i20.Material>(e)).toList()
           as T;
     }
     try {
@@ -728,6 +849,8 @@ class Protocol extends _i1.SerializationManagerServer {
       _i13.Material => 'Material',
       _i14.MaterialStatus => 'MaterialStatus',
       _i15.MaterialType => 'MaterialType',
+      _i16.StorageQuotaExceededException => 'StorageQuotaExceededException',
+      _i17.StoredFile => 'StoredFile',
       _ => null,
     };
   }
@@ -764,6 +887,10 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'MaterialStatus';
       case _i15.MaterialType():
         return 'MaterialType';
+      case _i16.StorageQuotaExceededException():
+        return 'StorageQuotaExceededException';
+      case _i17.StoredFile():
+        return 'StoredFile';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -819,6 +946,12 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'MaterialType') {
       return deserialize<_i15.MaterialType>(data['data']);
     }
+    if (dataClassName == 'StorageQuotaExceededException') {
+      return deserialize<_i16.StorageQuotaExceededException>(data['data']);
+    }
+    if (dataClassName == 'StoredFile') {
+      return deserialize<_i17.StoredFile>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
       return _i2.Protocol().deserializeByClassName(data);
@@ -865,6 +998,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i11.Customer.t;
       case _i13.Material:
         return _i13.Material.t;
+      case _i17.StoredFile:
+        return _i17.StoredFile.t;
     }
     return null;
   }

@@ -29,6 +29,8 @@ import 'package:octattoo_server/src/generated/greetings/greeting.dart' as _i10;
 import 'package:octattoo_server/src/generated/inventory/material.dart' as _i11;
 import 'package:octattoo_server/src/generated/inventory/material_type.dart'
     as _i12;
+import 'package:octattoo_server/src/generated/storage/stored_file.dart' as _i13;
+import 'dart:typed_data' as _i14;
 import 'package:octattoo_server/src/generated/protocol.dart';
 import 'package:octattoo_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -156,6 +158,8 @@ class TestEndpoints {
   late final _GreetingEndpoint greeting;
 
   late final _MaterialEndpoint material;
+
+  late final _StorageEndpoint storage;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -190,6 +194,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     material = _MaterialEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    storage = _StorageEndpoint(
       endpoints,
       serializationManager,
     );
@@ -1246,6 +1254,210 @@ class _MaterialEndpoint {
                   _localCallContext.arguments,
                 )
                 as _i3.Future<List<_i11.Material>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _StorageEndpoint {
+  _StorageEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i13.StoredFile> uploadFile(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required String fileName,
+    required String mimeType,
+    required _i14.ByteData bytes,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'storage',
+            method: 'uploadFile',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'storage',
+          methodName: 'uploadFile',
+          parameters: _i1.testObjectToJson({
+            'fileName': fileName,
+            'mimeType': mimeType,
+            'bytes': bytes,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i13.StoredFile>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i13.StoredFile?> getFile(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue fileId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'storage',
+            method: 'getFile',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'storage',
+          methodName: 'getFile',
+          parameters: _i1.testObjectToJson({'fileId': fileId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i13.StoredFile?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<bool> deleteFile(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue fileId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'storage',
+            method: 'deleteFile',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'storage',
+          methodName: 'deleteFile',
+          parameters: _i1.testObjectToJson({'fileId': fileId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<bool>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<String> getVariantUrl(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required _i2.UuidValue fileId,
+    required String variant,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'storage',
+            method: 'getVariantUrl',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'storage',
+          methodName: 'getVariantUrl',
+          parameters: _i1.testObjectToJson({
+            'fileId': fileId,
+            'variant': variant,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<String>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<int> getStorageUsage(_i1.TestSessionBuilder sessionBuilder) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'storage',
+            method: 'getStorageUsage',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'storage',
+          methodName: 'getStorageUsage',
+          parameters: _i1.testObjectToJson({}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<int>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<void> setStorageQuota(
+    _i1.TestSessionBuilder sessionBuilder,
+    int quotaBytes,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'storage',
+            method: 'setStorageQuota',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'storage',
+          methodName: 'setStorageQuota',
+          parameters: _i1.testObjectToJson({'quotaBytes': quotaBytes}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<void>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
