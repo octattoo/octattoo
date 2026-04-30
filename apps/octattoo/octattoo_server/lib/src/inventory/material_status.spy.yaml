@@ -1,0 +1,6 @@
+### The stock status of a Material.
+enum: MaterialStatus
+
+values:
+  - inStock
+  - empty

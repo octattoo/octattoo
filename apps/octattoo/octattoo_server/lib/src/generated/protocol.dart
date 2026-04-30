@@ -20,11 +20,18 @@ import 'artist_profile/artist_profile.dart' as _i5;
 import 'customer/create_customer_result.dart' as _i6;
 import 'customer/customer.dart' as _i7;
 import 'greetings/greeting.dart' as _i8;
-import 'package:octattoo_server/src/generated/customer/customer.dart' as _i9;
+import 'inventory/material.dart' as _i9;
+import 'inventory/material_status.dart' as _i10;
+import 'inventory/material_type.dart' as _i11;
+import 'package:octattoo_server/src/generated/customer/customer.dart' as _i12;
+import 'package:octattoo_server/src/generated/inventory/material.dart' as _i13;
 export 'artist_profile/artist_profile.dart';
 export 'customer/create_customer_result.dart';
 export 'customer/customer.dart';
 export 'greetings/greeting.dart';
+export 'inventory/material.dart';
+export 'inventory/material_status.dart';
+export 'inventory/material_type.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -207,6 +214,129 @@ class Protocol extends _i1.SerializationManagerServer {
       ],
       managed: true,
     ),
+    _i2.TableDefinition(
+      name: 'material',
+      dartName: 'Material',
+      schema: 'public',
+      module: 'octattoo',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid_v7()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'artistProfileId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'type',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:MaterialType',
+        ),
+        _i2.ColumnDefinition(
+          name: 'manufacturer',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'supplier',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'productName',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'batchNumber',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'expirationDate',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'status',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'protocol:MaterialStatus',
+        ),
+        _i2.ColumnDefinition(
+          name: 'quantity',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'createdAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: true,
+          dartType: 'DateTime?',
+          columnDefault: 'CURRENT_TIMESTAMP',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'material_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'material_artist_profile_id_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'artistProfileId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'material_batch_number_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'artistProfileId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'batchNumber',
+            ),
+          ],
+          type: 'btree',
+          isUnique: false,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
     ..._i3.Protocol.targetTableDefinitions,
     ..._i4.Protocol.targetTableDefinitions,
     ..._i2.Protocol.targetTableDefinitions,
@@ -251,6 +381,15 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i8.Greeting) {
       return _i8.Greeting.fromJson(data) as T;
     }
+    if (t == _i9.Material) {
+      return _i9.Material.fromJson(data) as T;
+    }
+    if (t == _i10.MaterialStatus) {
+      return _i10.MaterialStatus.fromJson(data) as T;
+    }
+    if (t == _i11.MaterialType) {
+      return _i11.MaterialType.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i5.ArtistProfile?>()) {
       return (data != null ? _i5.ArtistProfile.fromJson(data) : null) as T;
     }
@@ -264,12 +403,25 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i8.Greeting?>()) {
       return (data != null ? _i8.Greeting.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i9.Material?>()) {
+      return (data != null ? _i9.Material.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i10.MaterialStatus?>()) {
+      return (data != null ? _i10.MaterialStatus.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i11.MaterialType?>()) {
+      return (data != null ? _i11.MaterialType.fromJson(data) : null) as T;
+    }
     if (t == List<_i7.Customer>) {
       return (data as List).map((e) => deserialize<_i7.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i9.Customer>) {
-      return (data as List).map((e) => deserialize<_i9.Customer>(e)).toList()
+    if (t == List<_i12.Customer>) {
+      return (data as List).map((e) => deserialize<_i12.Customer>(e)).toList()
+          as T;
+    }
+    if (t == List<_i13.Material>) {
+      return (data as List).map((e) => deserialize<_i13.Material>(e)).toList()
           as T;
     }
     try {
@@ -290,6 +442,9 @@ class Protocol extends _i1.SerializationManagerServer {
       _i6.CreateCustomerResult => 'CreateCustomerResult',
       _i7.Customer => 'Customer',
       _i8.Greeting => 'Greeting',
+      _i9.Material => 'Material',
+      _i10.MaterialStatus => 'MaterialStatus',
+      _i11.MaterialType => 'MaterialType',
       _ => null,
     };
   }
@@ -312,6 +467,12 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'Customer';
       case _i8.Greeting():
         return 'Greeting';
+      case _i9.Material():
+        return 'Material';
+      case _i10.MaterialStatus():
+        return 'MaterialStatus';
+      case _i11.MaterialType():
+        return 'MaterialType';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -345,6 +506,15 @@ class Protocol extends _i1.SerializationManagerServer {
     }
     if (dataClassName == 'Greeting') {
       return deserialize<_i8.Greeting>(data['data']);
+    }
+    if (dataClassName == 'Material') {
+      return deserialize<_i9.Material>(data['data']);
+    }
+    if (dataClassName == 'MaterialStatus') {
+      return deserialize<_i10.MaterialStatus>(data['data']);
+    }
+    if (dataClassName == 'MaterialType') {
+      return deserialize<_i11.MaterialType>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -386,6 +556,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i5.ArtistProfile.t;
       case _i7.Customer:
         return _i7.Customer.t;
+      case _i9.Material:
+        return _i9.Material.t;
     }
     return null;
   }

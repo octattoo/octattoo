@@ -1,0 +1,6 @@
+### The type of a Material: ink or needle.
+enum: MaterialType
+
+values:
+  - ink
+  - needle
