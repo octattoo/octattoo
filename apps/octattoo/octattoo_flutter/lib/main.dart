@@ -4,6 +4,8 @@ import 'package:octattoo_client/octattoo_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 
+import 'src/auth/sign_in_screen.dart';
+
 late final Client client;
 
 void main() async {
@@ -20,39 +22,58 @@ void main() async {
 
 final _router = GoRouter(
   initialLocation: '/appointments',
+  redirect: (context, state) {
+    final isAuthenticated = client.auth.isAuthenticated;
+    final isOnAuth = state.matchedLocation == '/sign-in';
+    if (!isAuthenticated && !isOnAuth) return '/sign-in';
+    if (isAuthenticated && isOnAuth) return '/appointments';
+    return null;
+  },
   routes: [
+    GoRoute(
+      path: '/sign-in',
+      builder: (context, state) => const SignInScreen(),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
           AppShell(navigationShell: navigationShell),
       branches: [
-        StatefulShellBranch(routes: [
-          GoRoute(
-            path: '/appointments',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Appointments'),
-          ),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(
-            path: '/customers',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Customers'),
-          ),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(
-            path: '/projects',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Projects'),
-          ),
-        ]),
-        StatefulShellBranch(routes: [
-          GoRoute(
-            path: '/profile',
-            builder: (context, state) =>
-                const PlaceholderScreen(title: 'Artist Profile'),
-          ),
-        ]),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/appointments',
+              builder: (context, state) =>
+                  const PlaceholderScreen(title: 'Appointments'),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/customers',
+              builder: (context, state) =>
+                  const PlaceholderScreen(title: 'Customers'),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/projects',
+              builder: (context, state) =>
+                  const PlaceholderScreen(title: 'Projects'),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: '/profile',
+              builder: (context, state) =>
+                  const PlaceholderScreen(title: 'Artist Profile'),
+            ),
+          ],
+        ),
       ],
     ),
   ],
@@ -92,8 +113,10 @@ class AppShell extends StatelessWidget {
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) =>
-            navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex),
+        onDestinationSelected: (index) => navigationShell.goBranch(
+          index,
+          initialLocation: index == navigationShell.currentIndex,
+        ),
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.calendar_today_outlined),
@@ -193,8 +216,8 @@ class _DrawerSectionHeader extends StatelessWidget {
       child: Text(
         title,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              color: Theme.of(context).colorScheme.primary,
-            ),
+          color: Theme.of(context).colorScheme.primary,
+        ),
       ),
     );
   }

@@ -1,0 +1,15 @@
+### An artist's brand identity, auto-created on account registration.
+class: ArtistProfile
+table: artist_profile
+
+fields:
+  id: UuidValue?, defaultPersist=random_v7
+  ### The auth user this profile belongs to.
+  authUserId: UuidValue
+  ### Display name for the artist.
+  name: String
+
+indexes:
+  artist_profile_auth_user_id_unique:
+    fields: authUserId
+    unique: true
