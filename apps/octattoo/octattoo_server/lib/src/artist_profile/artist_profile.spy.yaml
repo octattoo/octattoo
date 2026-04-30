@@ -14,6 +14,12 @@ fields:
   expirationAlertDays: int, default=30
   ### Storage quota in bytes (default 500MB free tier).
   storageQuotaBytes: int, default=524288000
+  ### ARGB seed color for Material You theming (null = default theme).
+  seedColor: int?
+  ### Pre-computed light-mode CSS custom properties.
+  themeCssLight: String?
+  ### Pre-computed dark-mode CSS custom properties.
+  themeCssDark: String?
 
 indexes:
   artist_profile_auth_user_id_idx:

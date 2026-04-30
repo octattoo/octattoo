@@ -21,6 +21,9 @@ abstract class ArtistProfile implements _i1.SerializableModel {
     required this.handle,
     int? expirationAlertDays,
     int? storageQuotaBytes,
+    this.seedColor,
+    this.themeCssLight,
+    this.themeCssDark,
   }) : expirationAlertDays = expirationAlertDays ?? 30,
        storageQuotaBytes = storageQuotaBytes ?? 524288000;
 
@@ -31,6 +34,9 @@ abstract class ArtistProfile implements _i1.SerializableModel {
     required String handle,
     int? expirationAlertDays,
     int? storageQuotaBytes,
+    int? seedColor,
+    String? themeCssLight,
+    String? themeCssDark,
   }) = _ArtistProfileImpl;
 
   factory ArtistProfile.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -45,6 +51,9 @@ abstract class ArtistProfile implements _i1.SerializableModel {
       handle: jsonSerialization['handle'] as String,
       expirationAlertDays: jsonSerialization['expirationAlertDays'] as int?,
       storageQuotaBytes: jsonSerialization['storageQuotaBytes'] as int?,
+      seedColor: jsonSerialization['seedColor'] as int?,
+      themeCssLight: jsonSerialization['themeCssLight'] as String?,
+      themeCssDark: jsonSerialization['themeCssDark'] as String?,
     );
   }
 
@@ -68,6 +77,15 @@ abstract class ArtistProfile implements _i1.SerializableModel {
   /// Storage quota in bytes (default 500MB free tier).
   int storageQuotaBytes;
 
+  /// ARGB seed color for Material You theming (null = default theme).
+  int? seedColor;
+
+  /// Pre-computed light-mode CSS custom properties.
+  String? themeCssLight;
+
+  /// Pre-computed dark-mode CSS custom properties.
+  String? themeCssDark;
+
   /// Returns a shallow copy of this [ArtistProfile]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -78,6 +96,9 @@ abstract class ArtistProfile implements _i1.SerializableModel {
     String? handle,
     int? expirationAlertDays,
     int? storageQuotaBytes,
+    int? seedColor,
+    String? themeCssLight,
+    String? themeCssDark,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -89,6 +110,9 @@ abstract class ArtistProfile implements _i1.SerializableModel {
       'handle': handle,
       'expirationAlertDays': expirationAlertDays,
       'storageQuotaBytes': storageQuotaBytes,
+      if (seedColor != null) 'seedColor': seedColor,
+      if (themeCssLight != null) 'themeCssLight': themeCssLight,
+      if (themeCssDark != null) 'themeCssDark': themeCssDark,
     };
   }
 
@@ -108,6 +132,9 @@ class _ArtistProfileImpl extends ArtistProfile {
     required String handle,
     int? expirationAlertDays,
     int? storageQuotaBytes,
+    int? seedColor,
+    String? themeCssLight,
+    String? themeCssDark,
   }) : super._(
          id: id,
          authUserId: authUserId,
@@ -115,6 +142,9 @@ class _ArtistProfileImpl extends ArtistProfile {
          handle: handle,
          expirationAlertDays: expirationAlertDays,
          storageQuotaBytes: storageQuotaBytes,
+         seedColor: seedColor,
+         themeCssLight: themeCssLight,
+         themeCssDark: themeCssDark,
        );
 
   /// Returns a shallow copy of this [ArtistProfile]
@@ -128,6 +158,9 @@ class _ArtistProfileImpl extends ArtistProfile {
     String? handle,
     int? expirationAlertDays,
     int? storageQuotaBytes,
+    Object? seedColor = _Undefined,
+    Object? themeCssLight = _Undefined,
+    Object? themeCssDark = _Undefined,
   }) {
     return ArtistProfile(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -136,6 +169,11 @@ class _ArtistProfileImpl extends ArtistProfile {
       handle: handle ?? this.handle,
       expirationAlertDays: expirationAlertDays ?? this.expirationAlertDays,
       storageQuotaBytes: storageQuotaBytes ?? this.storageQuotaBytes,
+      seedColor: seedColor is int? ? seedColor : this.seedColor,
+      themeCssLight: themeCssLight is String?
+          ? themeCssLight
+          : this.themeCssLight,
+      themeCssDark: themeCssDark is String? ? themeCssDark : this.themeCssDark,
     );
   }
 }

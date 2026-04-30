@@ -4,11 +4,13 @@ class ProfileEntry {
   final String id;
   final String name;
   final String handle;
+  final int? seedColor;
 
   const ProfileEntry({
     required this.id,
     required this.name,
     required this.handle,
+    this.seedColor,
   });
 }
 

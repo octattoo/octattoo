@@ -341,6 +341,24 @@ class Protocol extends _i1.SerializationManagerServer {
           dartType: 'int',
           columnDefault: '524288000',
         ),
+        _i2.ColumnDefinition(
+          name: 'seedColor',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: true,
+          dartType: 'int?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'themeCssLight',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+        _i2.ColumnDefinition(
+          name: 'themeCssDark',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
       ],
       foreignKeys: [],
       indexes: [

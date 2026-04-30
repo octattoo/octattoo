@@ -11,6 +11,7 @@ import 'src/inventory/inventory_list_screen.dart';
 import 'src/inventory/material_form_screen.dart';
 import 'src/onboarding/onboarding_screen.dart';
 import 'src/profile/profile_switcher.dart';
+import 'src/theming/theme_viewmodel.dart';
 
 late Client client;
 
@@ -44,9 +45,21 @@ class ProfileState extends ChangeNotifier {
 }
 
 final profileState = ProfileState();
+final themeViewModel = ThemeViewModel();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Wire profile switches to theme updates
+  profileState.addListener(() {
+    final activeId = profileState.activeProfileId;
+    if (activeId == null) return;
+    final active = profileState.profiles.firstWhere(
+      (p) => p.id == activeId,
+      orElse: () => profileState.profiles.first,
+    );
+    themeViewModel.setSeedColor(active.seedColor);
+  });
 
   final serverUrl = await getServerUrl();
   client = Client(serverUrl)
@@ -145,18 +158,14 @@ class OctattooApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'octattoo',
-      theme: ThemeData(
-        colorSchemeSeed: const Color(0xFF6750A4),
-        useMaterial3: true,
+    return ListenableBuilder(
+      listenable: themeViewModel,
+      builder: (context, _) => MaterialApp.router(
+        title: 'octattoo',
+        theme: themeViewModel.lightTheme,
+        darkTheme: themeViewModel.darkTheme,
+        routerConfig: _router,
       ),
-      darkTheme: ThemeData(
-        colorSchemeSeed: const Color(0xFF6750A4),
-        useMaterial3: true,
-        brightness: Brightness.dark,
-      ),
-      routerConfig: _router,
     );
   }
 }
