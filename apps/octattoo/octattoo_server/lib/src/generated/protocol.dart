@@ -32,15 +32,19 @@ import 'secure_link/secure_link_status.dart' as _i17;
 import 'secure_link/secure_link_type.dart' as _i18;
 import 'storage/storage_quota_exceeded_exception.dart' as _i19;
 import 'storage/stored_file.dart' as _i20;
-import 'traceability/session_record.dart' as _i21;
+import 'traceability/recall_contact.dart' as _i21;
+import 'traceability/recall_match.dart' as _i22;
+import 'traceability/session_record.dart' as _i23;
 import 'package:octattoo_server/src/generated/appointment/appointment.dart'
-    as _i22;
+    as _i24;
 import 'package:octattoo_server/src/generated/artist_profile/artist_profile.dart'
-    as _i23;
-import 'package:octattoo_server/src/generated/customer/customer.dart' as _i24;
-import 'package:octattoo_server/src/generated/inventory/material.dart' as _i25;
+    as _i25;
+import 'package:octattoo_server/src/generated/customer/customer.dart' as _i26;
+import 'package:octattoo_server/src/generated/inventory/material.dart' as _i27;
+import 'package:octattoo_server/src/generated/traceability/recall_match.dart'
+    as _i28;
 import 'package:octattoo_server/src/generated/traceability/session_record.dart'
-    as _i26;
+    as _i29;
 export 'appointment/appointment.dart';
 export 'appointment/appointment_material.dart';
 export 'appointment/appointment_status.dart';
@@ -57,6 +61,8 @@ export 'secure_link/secure_link_status.dart';
 export 'secure_link/secure_link_type.dart';
 export 'storage/storage_quota_exceeded_exception.dart';
 export 'storage/stored_file.dart';
+export 'traceability/recall_contact.dart';
+export 'traceability/recall_match.dart';
 export 'traceability/session_record.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
@@ -646,6 +652,77 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'recall_contact',
+      dartName: 'RecallContact',
+      schema: 'public',
+      module: 'octattoo',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid_v7()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'artistProfileId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'customerId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'batchNumber',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'recall_contact_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'recall_contact_unique_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'artistProfileId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'customerId',
+            ),
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'batchNumber',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'secure_link',
       dartName: 'SecureLink',
       schema: 'public',
@@ -1011,8 +1088,14 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i20.StoredFile) {
       return _i20.StoredFile.fromJson(data) as T;
     }
-    if (t == _i21.SessionRecord) {
-      return _i21.SessionRecord.fromJson(data) as T;
+    if (t == _i21.RecallContact) {
+      return _i21.RecallContact.fromJson(data) as T;
+    }
+    if (t == _i22.RecallMatch) {
+      return _i22.RecallMatch.fromJson(data) as T;
+    }
+    if (t == _i23.SessionRecord) {
+      return _i23.SessionRecord.fromJson(data) as T;
     }
     if (t == _i1.getType<_i5.Appointment?>()) {
       return (data != null ? _i5.Appointment.fromJson(data) : null) as T;
@@ -1067,36 +1150,48 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i20.StoredFile?>()) {
       return (data != null ? _i20.StoredFile.fromJson(data) : null) as T;
     }
-    if (t == _i1.getType<_i21.SessionRecord?>()) {
-      return (data != null ? _i21.SessionRecord.fromJson(data) : null) as T;
+    if (t == _i1.getType<_i21.RecallContact?>()) {
+      return (data != null ? _i21.RecallContact.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i22.RecallMatch?>()) {
+      return (data != null ? _i22.RecallMatch.fromJson(data) : null) as T;
+    }
+    if (t == _i1.getType<_i23.SessionRecord?>()) {
+      return (data != null ? _i23.SessionRecord.fromJson(data) : null) as T;
     }
     if (t == List<_i11.Customer>) {
       return (data as List).map((e) => deserialize<_i11.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i22.Appointment>) {
+    if (t == List<_i24.Appointment>) {
       return (data as List)
-              .map((e) => deserialize<_i22.Appointment>(e))
+              .map((e) => deserialize<_i24.Appointment>(e))
               .toList()
           as T;
     }
-    if (t == List<_i23.ArtistProfile>) {
+    if (t == List<_i25.ArtistProfile>) {
       return (data as List)
-              .map((e) => deserialize<_i23.ArtistProfile>(e))
+              .map((e) => deserialize<_i25.ArtistProfile>(e))
               .toList()
           as T;
     }
-    if (t == List<_i24.Customer>) {
-      return (data as List).map((e) => deserialize<_i24.Customer>(e)).toList()
+    if (t == List<_i26.Customer>) {
+      return (data as List).map((e) => deserialize<_i26.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i25.Material>) {
-      return (data as List).map((e) => deserialize<_i25.Material>(e)).toList()
+    if (t == List<_i27.Material>) {
+      return (data as List).map((e) => deserialize<_i27.Material>(e)).toList()
           as T;
     }
-    if (t == List<_i26.SessionRecord>) {
+    if (t == List<_i28.RecallMatch>) {
       return (data as List)
-              .map((e) => deserialize<_i26.SessionRecord>(e))
+              .map((e) => deserialize<_i28.RecallMatch>(e))
+              .toList()
+          as T;
+    }
+    if (t == List<_i29.SessionRecord>) {
+      return (data as List)
+              .map((e) => deserialize<_i29.SessionRecord>(e))
               .toList()
           as T;
     }
@@ -1134,7 +1229,9 @@ class Protocol extends _i1.SerializationManagerServer {
       _i18.SecureLinkType => 'SecureLinkType',
       _i19.StorageQuotaExceededException => 'StorageQuotaExceededException',
       _i20.StoredFile => 'StoredFile',
-      _i21.SessionRecord => 'SessionRecord',
+      _i21.RecallContact => 'RecallContact',
+      _i22.RecallMatch => 'RecallMatch',
+      _i23.SessionRecord => 'SessionRecord',
       _ => null,
     };
   }
@@ -1181,7 +1278,11 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'StorageQuotaExceededException';
       case _i20.StoredFile():
         return 'StoredFile';
-      case _i21.SessionRecord():
+      case _i21.RecallContact():
+        return 'RecallContact';
+      case _i22.RecallMatch():
+        return 'RecallMatch';
+      case _i23.SessionRecord():
         return 'SessionRecord';
     }
     className = _i2.Protocol().getClassNameForObject(data);
@@ -1253,8 +1354,14 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'StoredFile') {
       return deserialize<_i20.StoredFile>(data['data']);
     }
+    if (dataClassName == 'RecallContact') {
+      return deserialize<_i21.RecallContact>(data['data']);
+    }
+    if (dataClassName == 'RecallMatch') {
+      return deserialize<_i22.RecallMatch>(data['data']);
+    }
     if (dataClassName == 'SessionRecord') {
-      return deserialize<_i21.SessionRecord>(data['data']);
+      return deserialize<_i23.SessionRecord>(data['data']);
     }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
@@ -1306,8 +1413,10 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i16.SecureLink.t;
       case _i20.StoredFile:
         return _i20.StoredFile.t;
-      case _i21.SessionRecord:
-        return _i21.SessionRecord.t;
+      case _i21.RecallContact:
+        return _i21.RecallContact.t;
+      case _i23.SessionRecord:
+        return _i23.SessionRecord.t;
     }
     return null;
   }

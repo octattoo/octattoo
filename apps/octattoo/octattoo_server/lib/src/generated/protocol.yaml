@@ -53,6 +53,10 @@ storage:
   - getVariantUrl:
   - getStorageUsage:
   - setStorageQuota:
+recall:
+  - searchByBatch:
+  - markContacted:
+  - unmarkContacted:
 sessionRecord:
   - getByAppointmentId:
   - getVersionHistory:

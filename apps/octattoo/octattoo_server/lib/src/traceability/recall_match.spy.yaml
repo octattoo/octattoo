@@ -1,0 +1,11 @@
+### A single match from a Recall search — assembled from joins, not stored directly.
+class: RecallMatch
+
+fields:
+  appointmentId: UuidValue
+  appointmentDate: DateTime
+  customerName: String
+  ### Email or phone, whichever is available.
+  customerContact: String
+  artistProfileName: String
+  contacted: bool
