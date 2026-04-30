@@ -1,0 +1,17 @@
+### Tracks whether a Customer has been contacted for a specific Batch recall.
+class: RecallContact
+table: recall_contact
+
+fields:
+  id: UuidValue?, defaultPersist=random_v7
+  ### The artist profile that owns this recall contact record.
+  artistProfileId: UuidValue
+  ### The customer who was affected.
+  customerId: UuidValue
+  ### The batch number being recalled.
+  batchNumber: String
+
+indexes:
+  recall_contact_unique_idx:
+    fields: artistProfileId, customerId, batchNumber
+    unique: true

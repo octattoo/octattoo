@@ -21,18 +21,19 @@ import '../greetings/greeting_endpoint.dart' as _i8;
 import '../inventory/material_endpoint.dart' as _i9;
 import '../secure_link/secure_link_endpoint.dart' as _i10;
 import '../storage/storage_endpoint.dart' as _i11;
-import '../traceability/session_record_endpoint.dart' as _i12;
+import '../traceability/recall_endpoint.dart' as _i12;
+import '../traceability/session_record_endpoint.dart' as _i13;
 import 'package:octattoo_server/src/generated/appointment/appointment_type.dart'
-    as _i13;
-import 'package:octattoo_server/src/generated/inventory/material_type.dart'
     as _i14;
-import 'package:octattoo_server/src/generated/secure_link/secure_link_type.dart'
+import 'package:octattoo_server/src/generated/inventory/material_type.dart'
     as _i15;
-import 'dart:typed_data' as _i16;
+import 'package:octattoo_server/src/generated/secure_link/secure_link_type.dart'
+    as _i16;
+import 'dart:typed_data' as _i17;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i17;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i18;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i19;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -98,7 +99,13 @@ class Endpoints extends _i1.EndpointDispatch {
           'storage',
           null,
         ),
-      'sessionRecord': _i12.SessionRecordEndpoint()
+      'recall': _i12.RecallEndpoint()
+        ..initialize(
+          server,
+          'recall',
+          null,
+        ),
+      'sessionRecord': _i13.SessionRecordEndpoint()
         ..initialize(
           server,
           'sessionRecord',
@@ -114,7 +121,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i13.AppointmentType>(),
+              type: _i1.getType<_i14.AppointmentType>(),
               nullable: false,
             ),
             'customerId': _i1.ParameterDescription(
@@ -783,7 +790,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i14.MaterialType>(),
+              type: _i1.getType<_i15.MaterialType>(),
               nullable: false,
             ),
             'manufacturer': _i1.ParameterDescription(
@@ -838,7 +845,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i14.MaterialType?>(),
+              type: _i1.getType<_i15.MaterialType?>(),
               nullable: true,
             ),
             'search': _i1.ParameterDescription(
@@ -1010,7 +1017,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i15.SecureLinkType>(),
+              type: _i1.getType<_i16.SecureLinkType>(),
               nullable: false,
             ),
             'targetId': _i1.ParameterDescription(
@@ -1095,7 +1102,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'bytes': _i1.ParameterDescription(
               name: 'bytes',
-              type: _i1.getType<_i16.ByteData>(),
+              type: _i1.getType<_i17.ByteData>(),
               nullable: false,
             ),
           },
@@ -1204,6 +1211,81 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
+    connectors['recall'] = _i1.EndpointConnector(
+      name: 'recall',
+      endpoint: endpoints['recall']!,
+      methodConnectors: {
+        'searchByBatch': _i1.MethodConnector(
+          name: 'searchByBatch',
+          params: {
+            'batchNumber': _i1.ParameterDescription(
+              name: 'batchNumber',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['recall'] as _i12.RecallEndpoint).searchByBatch(
+                    session,
+                    params['batchNumber'],
+                  ),
+        ),
+        'markContacted': _i1.MethodConnector(
+          name: 'markContacted',
+          params: {
+            'customerId': _i1.ParameterDescription(
+              name: 'customerId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'batchNumber': _i1.ParameterDescription(
+              name: 'batchNumber',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['recall'] as _i12.RecallEndpoint).markContacted(
+                    session,
+                    params['customerId'],
+                    params['batchNumber'],
+                  ),
+        ),
+        'unmarkContacted': _i1.MethodConnector(
+          name: 'unmarkContacted',
+          params: {
+            'customerId': _i1.ParameterDescription(
+              name: 'customerId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'batchNumber': _i1.ParameterDescription(
+              name: 'batchNumber',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['recall'] as _i12.RecallEndpoint).unmarkContacted(
+                    session,
+                    params['customerId'],
+                    params['batchNumber'],
+                  ),
+        ),
+      },
+    );
     connectors['sessionRecord'] = _i1.EndpointConnector(
       name: 'sessionRecord',
       endpoint: endpoints['sessionRecord']!,
@@ -1222,7 +1304,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['sessionRecord'] as _i12.SessionRecordEndpoint)
+                  (endpoints['sessionRecord'] as _i13.SessionRecordEndpoint)
                       .getByAppointmentId(
                         session,
                         params['appointmentId'],
@@ -1242,7 +1324,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['sessionRecord'] as _i12.SessionRecordEndpoint)
+                  (endpoints['sessionRecord'] as _i13.SessionRecordEndpoint)
                       .getVersionHistory(
                         session,
                         params['appointmentId'],
@@ -1272,7 +1354,7 @@ class Endpoints extends _i1.EndpointDispatch {
                 _i1.Session session,
                 Map<String, dynamic> params,
               ) async =>
-                  (endpoints['sessionRecord'] as _i12.SessionRecordEndpoint)
+                  (endpoints['sessionRecord'] as _i13.SessionRecordEndpoint)
                       .amendSessionRecord(
                         session,
                         params['appointmentId'],
@@ -1282,9 +1364,9 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i17.Endpoints()
+    modules['serverpod_auth_idp'] = _i18.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i18.Endpoints()
+    modules['serverpod_auth_core'] = _i19.Endpoints()
       ..initializeEndpoints(server);
   }
 }

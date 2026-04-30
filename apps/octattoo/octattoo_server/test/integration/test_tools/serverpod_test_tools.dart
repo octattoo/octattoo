@@ -37,8 +37,10 @@ import 'package:octattoo_server/src/generated/secure_link/secure_link_type.dart'
     as _i15;
 import 'package:octattoo_server/src/generated/storage/stored_file.dart' as _i16;
 import 'dart:typed_data' as _i17;
-import 'package:octattoo_server/src/generated/traceability/session_record.dart'
+import 'package:octattoo_server/src/generated/traceability/recall_match.dart'
     as _i18;
+import 'package:octattoo_server/src/generated/traceability/session_record.dart'
+    as _i19;
 import 'package:octattoo_server/src/generated/protocol.dart';
 import 'package:octattoo_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -173,6 +175,8 @@ class TestEndpoints {
 
   late final _StorageEndpoint storage;
 
+  late final _RecallEndpoint recall;
+
   late final _SessionRecordEndpoint sessionRecord;
 }
 
@@ -220,6 +224,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     storage = _StorageEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    recall = _RecallEndpoint(
       endpoints,
       serializationManager,
     );
@@ -1843,6 +1851,118 @@ class _StorageEndpoint {
   }
 }
 
+class _RecallEndpoint {
+  _RecallEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<List<_i18.RecallMatch>> searchByBatch(
+    _i1.TestSessionBuilder sessionBuilder,
+    String batchNumber,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'recall',
+            method: 'searchByBatch',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'recall',
+          methodName: 'searchByBatch',
+          parameters: _i1.testObjectToJson({'batchNumber': batchNumber}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i18.RecallMatch>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<void> markContacted(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue customerId,
+    String batchNumber,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'recall',
+            method: 'markContacted',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'recall',
+          methodName: 'markContacted',
+          parameters: _i1.testObjectToJson({
+            'customerId': customerId,
+            'batchNumber': batchNumber,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<void> unmarkContacted(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue customerId,
+    String batchNumber,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'recall',
+            method: 'unmarkContacted',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'recall',
+          methodName: 'unmarkContacted',
+          parameters: _i1.testObjectToJson({
+            'customerId': customerId,
+            'batchNumber': batchNumber,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
 class _SessionRecordEndpoint {
   _SessionRecordEndpoint(
     this._endpointDispatch,
@@ -1853,7 +1973,7 @@ class _SessionRecordEndpoint {
 
   final _i2.SerializationManager _serializationManager;
 
-  _i3.Future<_i18.SessionRecord?> getByAppointmentId(
+  _i3.Future<_i19.SessionRecord?> getByAppointmentId(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue appointmentId,
   ) async {
@@ -1876,7 +1996,7 @@ class _SessionRecordEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i18.SessionRecord?>);
+                as _i3.Future<_i19.SessionRecord?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1884,7 +2004,7 @@ class _SessionRecordEndpoint {
     });
   }
 
-  _i3.Future<List<_i18.SessionRecord>> getVersionHistory(
+  _i3.Future<List<_i19.SessionRecord>> getVersionHistory(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue appointmentId,
   ) async {
@@ -1907,7 +2027,7 @@ class _SessionRecordEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<List<_i18.SessionRecord>>);
+                as _i3.Future<List<_i19.SessionRecord>>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
@@ -1915,7 +2035,7 @@ class _SessionRecordEndpoint {
     });
   }
 
-  _i3.Future<_i18.SessionRecord> amendSessionRecord(
+  _i3.Future<_i19.SessionRecord> amendSessionRecord(
     _i1.TestSessionBuilder sessionBuilder,
     _i2.UuidValue appointmentId,
     List<_i2.UuidValue> materialIds,
@@ -1944,7 +2064,7 @@ class _SessionRecordEndpoint {
                   _localUniqueSession,
                   _localCallContext.arguments,
                 )
-                as _i3.Future<_i18.SessionRecord>);
+                as _i3.Future<_i19.SessionRecord>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();
