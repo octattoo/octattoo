@@ -14,8 +14,10 @@ fields:
   version: int
   ### Hash of the previous version (null for v1).
   previousHash: String?
+  ### Reason for amendment (null for v1, required for v2+).
+  reason: String?
 
 indexes:
-  session_record_appointment_id_idx:
-    fields: appointmentId
+  session_record_appointment_version_idx:
+    fields: appointmentId, version
     unique: true

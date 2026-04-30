@@ -21,6 +21,7 @@ abstract class SessionRecord implements _i1.SerializableModel {
     required this.sealedAt,
     required this.version,
     this.previousHash,
+    this.reason,
   });
 
   factory SessionRecord({
@@ -30,6 +31,7 @@ abstract class SessionRecord implements _i1.SerializableModel {
     required DateTime sealedAt,
     required int version,
     String? previousHash,
+    String? reason,
   }) = _SessionRecordImpl;
 
   factory SessionRecord.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -46,6 +48,7 @@ abstract class SessionRecord implements _i1.SerializableModel {
       ),
       version: jsonSerialization['version'] as int,
       previousHash: jsonSerialization['previousHash'] as String?,
+      reason: jsonSerialization['reason'] as String?,
     );
   }
 
@@ -69,6 +72,9 @@ abstract class SessionRecord implements _i1.SerializableModel {
   /// Hash of the previous version (null for v1).
   String? previousHash;
 
+  /// Reason for amendment (null for v1, required for v2+).
+  String? reason;
+
   /// Returns a shallow copy of this [SessionRecord]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -79,6 +85,7 @@ abstract class SessionRecord implements _i1.SerializableModel {
     DateTime? sealedAt,
     int? version,
     String? previousHash,
+    String? reason,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -90,6 +97,7 @@ abstract class SessionRecord implements _i1.SerializableModel {
       'sealedAt': sealedAt.toJson(),
       'version': version,
       if (previousHash != null) 'previousHash': previousHash,
+      if (reason != null) 'reason': reason,
     };
   }
 
@@ -109,6 +117,7 @@ class _SessionRecordImpl extends SessionRecord {
     required DateTime sealedAt,
     required int version,
     String? previousHash,
+    String? reason,
   }) : super._(
          id: id,
          appointmentId: appointmentId,
@@ -116,6 +125,7 @@ class _SessionRecordImpl extends SessionRecord {
          sealedAt: sealedAt,
          version: version,
          previousHash: previousHash,
+         reason: reason,
        );
 
   /// Returns a shallow copy of this [SessionRecord]
@@ -129,6 +139,7 @@ class _SessionRecordImpl extends SessionRecord {
     DateTime? sealedAt,
     int? version,
     Object? previousHash = _Undefined,
+    Object? reason = _Undefined,
   }) {
     return SessionRecord(
       id: id is _i1.UuidValue? ? id : this.id,
@@ -137,6 +148,7 @@ class _SessionRecordImpl extends SessionRecord {
       sealedAt: sealedAt ?? this.sealedAt,
       version: version ?? this.version,
       previousHash: previousHash is String? ? previousHash : this.previousHash,
+      reason: reason is String? ? reason : this.reason,
     );
   }
 }
