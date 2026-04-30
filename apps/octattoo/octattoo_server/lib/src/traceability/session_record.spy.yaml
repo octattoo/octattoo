@@ -1,0 +1,21 @@
+### The immutable, hash-sealed snapshot of an Appointment's traceability fields.
+class: SessionRecord
+table: session_record
+
+fields:
+  id: UuidValue?, defaultPersist=random_v7
+  ### The appointment this record seals.
+  appointmentId: UuidValue
+  ### SHA-256 hex hash of canonical traceability fields.
+  hash: String
+  ### When this record was sealed.
+  sealedAt: DateTime
+  ### Version number (starts at 1, increments on amendment).
+  version: int
+  ### Hash of the previous version (null for v1).
+  previousHash: String?
+
+indexes:
+  session_record_appointment_id_idx:
+    fields: appointmentId
+    unique: true

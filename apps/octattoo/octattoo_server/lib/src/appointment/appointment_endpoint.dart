@@ -1,6 +1,7 @@
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
+import '../traceability/session_record_hash.dart';
 
 class AppointmentEndpoint extends Endpoint {
   @override
@@ -82,7 +83,34 @@ class AppointmentEndpoint extends Endpoint {
     appointment.status = AppointmentStatus.finalized;
     appointment.finalizedAt = DateTime.now();
 
-    return Appointment.db.updateRow(session, appointment);
+    final updated = await Appointment.db.updateRow(session, appointment);
+
+    // Seal: compute hash and create SessionRecord
+    final sealMaterials = await AppointmentMaterial.db.find(
+      session,
+      where: (t) => t.appointmentId.equals(appointmentId),
+    );
+
+    final hash = computeSessionRecordHash(
+      appointmentId: appointmentId,
+      artistProfileId: appointment.artistProfileId,
+      customerId: appointment.customerId,
+      finalizedAt: updated.finalizedAt!,
+      type: appointment.type,
+      materials: sealMaterials,
+    );
+
+    await SessionRecord.db.insertRow(
+      session,
+      SessionRecord(
+        appointmentId: appointmentId,
+        hash: hash,
+        sealedAt: DateTime.now(),
+        version: 1,
+      ),
+    );
+
+    return updated;
   }
 
   /// Records a material from inventory, creating a snapshot.
@@ -95,7 +123,9 @@ class AppointmentEndpoint extends Endpoint {
     final appointment = await _getOwnedAppointment(session, appointmentId);
 
     if (appointment.status != AppointmentStatus.inProgress) {
-      throw StateError('Can only record materials when appointment is in progress');
+      throw StateError(
+        'Can only record materials when appointment is in progress',
+      );
     }
 
     final material = await Material.db.findFirstRow(
@@ -116,8 +146,9 @@ class AppointmentEndpoint extends Endpoint {
         throw StateError('Needle has no remaining quantity');
       }
       material.quantity = qty - 1;
-      material.status =
-          qty - 1 == 0 ? MaterialStatus.empty : MaterialStatus.inStock;
+      material.status = qty - 1 == 0
+          ? MaterialStatus.empty
+          : MaterialStatus.inStock;
       await Material.db.updateRow(session, material);
     }
 

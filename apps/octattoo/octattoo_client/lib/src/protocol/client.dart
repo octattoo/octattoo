@@ -31,7 +31,9 @@ import 'package:octattoo_client/src/protocol/inventory/material_type.dart'
     as _i12;
 import 'package:octattoo_client/src/protocol/storage/stored_file.dart' as _i13;
 import 'dart:typed_data' as _i14;
-import 'protocol.dart' as _i15;
+import 'package:octattoo_client/src/protocol/traceability/session_record.dart'
+    as _i15;
+import 'protocol.dart' as _i16;
 
 /// {@category Endpoint}
 class EndpointAppointment extends _i1.EndpointRef {
@@ -603,6 +605,23 @@ class EndpointStorage extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointSessionRecord extends _i1.EndpointRef {
+  EndpointSessionRecord(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'sessionRecord';
+
+  /// Returns the SessionRecord for a given appointment, or null if not sealed.
+  _i2.Future<_i15.SessionRecord?> getByAppointmentId(
+    _i1.UuidValue appointmentId,
+  ) => caller.callServerEndpoint<_i15.SessionRecord?>(
+    'sessionRecord',
+    'getByAppointmentId',
+    {'appointmentId': appointmentId},
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i6.Caller(client);
@@ -634,7 +653,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i15.Protocol(),
+         _i16.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -651,6 +670,7 @@ class Client extends _i1.ServerpodClientShared {
     greeting = EndpointGreeting(this);
     material = EndpointMaterial(this);
     storage = EndpointStorage(this);
+    sessionRecord = EndpointSessionRecord(this);
     modules = Modules(this);
   }
 
@@ -670,6 +690,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointStorage storage;
 
+  late final EndpointSessionRecord sessionRecord;
+
   late final Modules modules;
 
   @override
@@ -682,6 +704,7 @@ class Client extends _i1.ServerpodClientShared {
     'greeting': greeting,
     'material': material,
     'storage': storage,
+    'sessionRecord': sessionRecord,
   };
 
   @override
