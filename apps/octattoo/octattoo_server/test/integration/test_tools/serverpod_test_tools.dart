@@ -20,6 +20,9 @@ import 'package:octattoo_server/src/generated/customer/create_customer_result.da
     as _i5;
 import 'package:octattoo_server/src/generated/customer/customer.dart' as _i6;
 import 'package:octattoo_server/src/generated/greetings/greeting.dart' as _i7;
+import 'package:octattoo_server/src/generated/inventory/material.dart' as _i8;
+import 'package:octattoo_server/src/generated/inventory/material_type.dart'
+    as _i9;
 import 'package:octattoo_server/src/generated/protocol.dart';
 import 'package:octattoo_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -143,6 +146,8 @@ class TestEndpoints {
   late final _CustomerEndpoint customer;
 
   late final _GreetingEndpoint greeting;
+
+  late final _MaterialEndpoint material;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -169,6 +174,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     greeting = _GreetingEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    material = _MaterialEndpoint(
       endpoints,
       serializationManager,
     );
@@ -752,6 +761,268 @@ class _GreetingEndpoint {
                   _localCallContext.arguments,
                 )
                 as _i3.Future<_i7.Greeting>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _MaterialEndpoint {
+  _MaterialEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i8.Material> createMaterial(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required _i9.MaterialType type,
+    required String manufacturer,
+    required String supplier,
+    required String productName,
+    required String batchNumber,
+    required DateTime expirationDate,
+    int? quantity,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'material',
+            method: 'createMaterial',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'material',
+          methodName: 'createMaterial',
+          parameters: _i1.testObjectToJson({
+            'type': type,
+            'manufacturer': manufacturer,
+            'supplier': supplier,
+            'productName': productName,
+            'batchNumber': batchNumber,
+            'expirationDate': expirationDate,
+            'quantity': quantity,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i8.Material>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<List<_i8.Material>> listMaterials(
+    _i1.TestSessionBuilder sessionBuilder, {
+    _i9.MaterialType? type,
+    String? search,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'material',
+            method: 'listMaterials',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'material',
+          methodName: 'listMaterials',
+          parameters: _i1.testObjectToJson({
+            'type': type,
+            'search': search,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<List<_i8.Material>>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i8.Material?> getMaterial(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue materialId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'material',
+            method: 'getMaterial',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'material',
+          methodName: 'getMaterial',
+          parameters: _i1.testObjectToJson({'materialId': materialId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i8.Material?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i8.Material?> updateMaterial(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required _i2.UuidValue materialId,
+    required String manufacturer,
+    required String supplier,
+    required String productName,
+    required String batchNumber,
+    required DateTime expirationDate,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'material',
+            method: 'updateMaterial',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'material',
+          methodName: 'updateMaterial',
+          parameters: _i1.testObjectToJson({
+            'materialId': materialId,
+            'manufacturer': manufacturer,
+            'supplier': supplier,
+            'productName': productName,
+            'batchNumber': batchNumber,
+            'expirationDate': expirationDate,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i8.Material?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<bool> deleteMaterial(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue materialId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'material',
+            method: 'deleteMaterial',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'material',
+          methodName: 'deleteMaterial',
+          parameters: _i1.testObjectToJson({'materialId': materialId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<bool>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i8.Material?> toggleInkStatus(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue materialId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'material',
+            method: 'toggleInkStatus',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'material',
+          methodName: 'toggleInkStatus',
+          parameters: _i1.testObjectToJson({'materialId': materialId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i8.Material?>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+
+  _i3.Future<_i8.Material?> setNeedleQuantity(
+    _i1.TestSessionBuilder sessionBuilder, {
+    required _i2.UuidValue materialId,
+    required int quantity,
+  }) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'material',
+            method: 'setNeedleQuantity',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'material',
+          methodName: 'setNeedleQuantity',
+          parameters: _i1.testObjectToJson({
+            'materialId': materialId,
+            'quantity': quantity,
+          }),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i8.Material?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

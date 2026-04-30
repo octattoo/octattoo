@@ -1,0 +1,32 @@
+### A physical item (ink or needle) in an artist's personal inventory.
+class: Material
+table: material
+
+fields:
+  id: UuidValue?, defaultPersist=random_v7
+  ### The artist profile this material belongs to.
+  artistProfileId: UuidValue
+  ### Ink or needle.
+  type: MaterialType
+  ### Manufacturer name.
+  manufacturer: String
+  ### Supplier name.
+  supplier: String
+  ### Product name.
+  productName: String
+  ### Batch number (key field for recall searches).
+  batchNumber: String
+  ### Expiration date.
+  expirationDate: DateTime
+  ### Current stock status.
+  status: MaterialStatus
+  ### Quantity (needles only, null for ink).
+  quantity: int?
+  ### When this material was created.
+  createdAt: DateTime?, defaultPersist=now
+
+indexes:
+  material_artist_profile_id_idx:
+    fields: artistProfileId
+  material_batch_number_idx:
+    fields: artistProfileId, batchNumber

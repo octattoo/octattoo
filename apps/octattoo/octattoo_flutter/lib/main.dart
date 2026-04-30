@@ -4,6 +4,9 @@ import 'package:octattoo_client/octattoo_client.dart';
 import 'package:serverpod_auth_idp_flutter/serverpod_auth_idp_flutter.dart';
 import 'package:serverpod_flutter/serverpod_flutter.dart';
 
+import 'src/inventory/inventory_list_screen.dart';
+import 'src/inventory/material_form_screen.dart';
+
 import 'src/auth/sign_in_screen.dart';
 import 'src/customer/customer_list_screen.dart';
 
@@ -34,6 +37,21 @@ final _router = GoRouter(
     GoRoute(
       path: '/sign-in',
       builder: (context, state) => const SignInScreen(),
+    ),
+    GoRoute(
+      path: '/inventory',
+      builder: (context, state) => Scaffold(
+        appBar: AppBar(title: const Text('Inventory')),
+        body: const InventoryListScreen(),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => context.push('/inventory/new'),
+          child: const Icon(Icons.add),
+        ),
+      ),
+    ),
+    GoRoute(
+      path: '/inventory/new',
+      builder: (context, state) => const MaterialFormScreen(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
@@ -161,9 +179,13 @@ class AppDrawer extends StatelessWidget {
           ),
           // Work
           const _DrawerSectionHeader(title: 'Work'),
-          const ListTile(
-            leading: Icon(Icons.inventory_2_outlined),
-            title: Text('Inventory'),
+          ListTile(
+            leading: const Icon(Icons.inventory_2_outlined),
+            title: const Text('Inventory'),
+            onTap: () {
+              Navigator.of(context).pop();
+              GoRouter.of(context).go('/inventory');
+            },
           ),
           const ListTile(
             leading: Icon(Icons.location_on_outlined),

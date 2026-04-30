@@ -19,3 +19,11 @@ customer:
   - deleteCustomer:
 greeting:
   - hello:
+material:
+  - createMaterial:
+  - listMaterials:
+  - getMaterial:
+  - updateMaterial:
+  - deleteMaterial:
+  - toggleInkStatus:
+  - setNeedleQuantity:

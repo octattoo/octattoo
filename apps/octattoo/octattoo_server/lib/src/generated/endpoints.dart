@@ -16,10 +16,13 @@ import '../auth/email_idp_endpoint.dart' as _i3;
 import '../auth/jwt_refresh_endpoint.dart' as _i4;
 import '../customer/customer_endpoint.dart' as _i5;
 import '../greetings/greeting_endpoint.dart' as _i6;
-import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i7;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+import '../inventory/material_endpoint.dart' as _i7;
+import 'package:octattoo_server/src/generated/inventory/material_type.dart'
     as _i8;
+import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
+    as _i9;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i10;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -53,6 +56,12 @@ class Endpoints extends _i1.EndpointDispatch {
         ..initialize(
           server,
           'greeting',
+          null,
+        ),
+      'material': _i7.MaterialEndpoint()
+        ..initialize(
+          server,
+          'material',
           null,
         ),
     };
@@ -444,9 +453,226 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i7.Endpoints()
+    connectors['material'] = _i1.EndpointConnector(
+      name: 'material',
+      endpoint: endpoints['material']!,
+      methodConnectors: {
+        'createMaterial': _i1.MethodConnector(
+          name: 'createMaterial',
+          params: {
+            'type': _i1.ParameterDescription(
+              name: 'type',
+              type: _i1.getType<_i8.MaterialType>(),
+              nullable: false,
+            ),
+            'manufacturer': _i1.ParameterDescription(
+              name: 'manufacturer',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'supplier': _i1.ParameterDescription(
+              name: 'supplier',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'productName': _i1.ParameterDescription(
+              name: 'productName',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'batchNumber': _i1.ParameterDescription(
+              name: 'batchNumber',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'expirationDate': _i1.ParameterDescription(
+              name: 'expirationDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+            'quantity': _i1.ParameterDescription(
+              name: 'quantity',
+              type: _i1.getType<int?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['material'] as _i7.MaterialEndpoint)
+                  .createMaterial(
+                    session,
+                    type: params['type'],
+                    manufacturer: params['manufacturer'],
+                    supplier: params['supplier'],
+                    productName: params['productName'],
+                    batchNumber: params['batchNumber'],
+                    expirationDate: params['expirationDate'],
+                    quantity: params['quantity'],
+                  ),
+        ),
+        'listMaterials': _i1.MethodConnector(
+          name: 'listMaterials',
+          params: {
+            'type': _i1.ParameterDescription(
+              name: 'type',
+              type: _i1.getType<_i8.MaterialType?>(),
+              nullable: true,
+            ),
+            'search': _i1.ParameterDescription(
+              name: 'search',
+              type: _i1.getType<String?>(),
+              nullable: true,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['material'] as _i7.MaterialEndpoint).listMaterials(
+                    session,
+                    type: params['type'],
+                    search: params['search'],
+                  ),
+        ),
+        'getMaterial': _i1.MethodConnector(
+          name: 'getMaterial',
+          params: {
+            'materialId': _i1.ParameterDescription(
+              name: 'materialId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['material'] as _i7.MaterialEndpoint).getMaterial(
+                    session,
+                    params['materialId'],
+                  ),
+        ),
+        'updateMaterial': _i1.MethodConnector(
+          name: 'updateMaterial',
+          params: {
+            'materialId': _i1.ParameterDescription(
+              name: 'materialId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'manufacturer': _i1.ParameterDescription(
+              name: 'manufacturer',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'supplier': _i1.ParameterDescription(
+              name: 'supplier',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'productName': _i1.ParameterDescription(
+              name: 'productName',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'batchNumber': _i1.ParameterDescription(
+              name: 'batchNumber',
+              type: _i1.getType<String>(),
+              nullable: false,
+            ),
+            'expirationDate': _i1.ParameterDescription(
+              name: 'expirationDate',
+              type: _i1.getType<DateTime>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['material'] as _i7.MaterialEndpoint)
+                  .updateMaterial(
+                    session,
+                    materialId: params['materialId'],
+                    manufacturer: params['manufacturer'],
+                    supplier: params['supplier'],
+                    productName: params['productName'],
+                    batchNumber: params['batchNumber'],
+                    expirationDate: params['expirationDate'],
+                  ),
+        ),
+        'deleteMaterial': _i1.MethodConnector(
+          name: 'deleteMaterial',
+          params: {
+            'materialId': _i1.ParameterDescription(
+              name: 'materialId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['material'] as _i7.MaterialEndpoint)
+                  .deleteMaterial(
+                    session,
+                    params['materialId'],
+                  ),
+        ),
+        'toggleInkStatus': _i1.MethodConnector(
+          name: 'toggleInkStatus',
+          params: {
+            'materialId': _i1.ParameterDescription(
+              name: 'materialId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['material'] as _i7.MaterialEndpoint)
+                  .toggleInkStatus(
+                    session,
+                    params['materialId'],
+                  ),
+        ),
+        'setNeedleQuantity': _i1.MethodConnector(
+          name: 'setNeedleQuantity',
+          params: {
+            'materialId': _i1.ParameterDescription(
+              name: 'materialId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+            'quantity': _i1.ParameterDescription(
+              name: 'quantity',
+              type: _i1.getType<int>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['material'] as _i7.MaterialEndpoint)
+                  .setNeedleQuantity(
+                    session,
+                    materialId: params['materialId'],
+                    quantity: params['quantity'],
+                  ),
+        ),
+      },
+    );
+    modules['serverpod_auth_idp'] = _i9.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i8.Endpoints()
+    modules['serverpod_auth_core'] = _i10.Endpoints()
       ..initializeEndpoints(server);
   }
 }

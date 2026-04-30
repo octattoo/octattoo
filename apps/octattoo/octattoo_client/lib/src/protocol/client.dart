@@ -20,7 +20,10 @@ import 'package:octattoo_client/src/protocol/customer/create_customer_result.dar
     as _i5;
 import 'package:octattoo_client/src/protocol/customer/customer.dart' as _i6;
 import 'package:octattoo_client/src/protocol/greetings/greeting.dart' as _i7;
-import 'protocol.dart' as _i8;
+import 'package:octattoo_client/src/protocol/inventory/material.dart' as _i8;
+import 'package:octattoo_client/src/protocol/inventory/material_type.dart'
+    as _i9;
+import 'protocol.dart' as _i10;
 
 /// {@category Endpoint}
 class EndpointArtistProfile extends _i1.EndpointRef {
@@ -346,6 +349,108 @@ class EndpointGreeting extends _i1.EndpointRef {
       );
 }
 
+/// {@category Endpoint}
+class EndpointMaterial extends _i1.EndpointRef {
+  EndpointMaterial(_i1.EndpointCaller caller) : super(caller);
+
+  @override
+  String get name => 'material';
+
+  /// Creates a material in the artist's personal inventory.
+  _i2.Future<_i8.Material> createMaterial({
+    required _i9.MaterialType type,
+    required String manufacturer,
+    required String supplier,
+    required String productName,
+    required String batchNumber,
+    required DateTime expirationDate,
+    int? quantity,
+  }) => caller.callServerEndpoint<_i8.Material>(
+    'material',
+    'createMaterial',
+    {
+      'type': type,
+      'manufacturer': manufacturer,
+      'supplier': supplier,
+      'productName': productName,
+      'batchNumber': batchNumber,
+      'expirationDate': expirationDate,
+      'quantity': quantity,
+    },
+  );
+
+  /// Lists materials for the current artist profile.
+  _i2.Future<List<_i8.Material>> listMaterials({
+    _i9.MaterialType? type,
+    String? search,
+  }) => caller.callServerEndpoint<List<_i8.Material>>(
+    'material',
+    'listMaterials',
+    {
+      'type': type,
+      'search': search,
+    },
+  );
+
+  /// Gets a single material by ID (scoped to artist profile).
+  _i2.Future<_i8.Material?> getMaterial(_i1.UuidValue materialId) =>
+      caller.callServerEndpoint<_i8.Material?>(
+        'material',
+        'getMaterial',
+        {'materialId': materialId},
+      );
+
+  /// Updates a material (scoped to artist profile).
+  _i2.Future<_i8.Material?> updateMaterial({
+    required _i1.UuidValue materialId,
+    required String manufacturer,
+    required String supplier,
+    required String productName,
+    required String batchNumber,
+    required DateTime expirationDate,
+  }) => caller.callServerEndpoint<_i8.Material?>(
+    'material',
+    'updateMaterial',
+    {
+      'materialId': materialId,
+      'manufacturer': manufacturer,
+      'supplier': supplier,
+      'productName': productName,
+      'batchNumber': batchNumber,
+      'expirationDate': expirationDate,
+    },
+  );
+
+  /// Deletes a material (scoped to artist profile).
+  _i2.Future<bool> deleteMaterial(_i1.UuidValue materialId) =>
+      caller.callServerEndpoint<bool>(
+        'material',
+        'deleteMaterial',
+        {'materialId': materialId},
+      );
+
+  /// Toggles ink status between inStock and empty.
+  _i2.Future<_i8.Material?> toggleInkStatus(_i1.UuidValue materialId) =>
+      caller.callServerEndpoint<_i8.Material?>(
+        'material',
+        'toggleInkStatus',
+        {'materialId': materialId},
+      );
+
+  /// Sets needle quantity. Auto-marks empty when quantity reaches 0.
+  _i2.Future<_i8.Material?> setNeedleQuantity({
+    required _i1.UuidValue materialId,
+    required int quantity,
+  }) => caller.callServerEndpoint<_i8.Material?>(
+    'material',
+    'setNeedleQuantity',
+    {
+      'materialId': materialId,
+      'quantity': quantity,
+    },
+  );
+}
+
 class Modules {
   Modules(Client client) {
     serverpod_auth_idp = _i3.Caller(client);
@@ -377,7 +482,7 @@ class Client extends _i1.ServerpodClientShared {
     bool? disconnectStreamsOnLostInternetConnection,
   }) : super(
          host,
-         _i8.Protocol(),
+         _i10.Protocol(),
          securityContext: securityContext,
          streamingConnectionTimeout: streamingConnectionTimeout,
          connectionTimeout: connectionTimeout,
@@ -391,6 +496,7 @@ class Client extends _i1.ServerpodClientShared {
     jwtRefresh = EndpointJwtRefresh(this);
     customer = EndpointCustomer(this);
     greeting = EndpointGreeting(this);
+    material = EndpointMaterial(this);
     modules = Modules(this);
   }
 
@@ -404,6 +510,8 @@ class Client extends _i1.ServerpodClientShared {
 
   late final EndpointGreeting greeting;
 
+  late final EndpointMaterial material;
+
   late final Modules modules;
 
   @override
@@ -413,6 +521,7 @@ class Client extends _i1.ServerpodClientShared {
     'jwtRefresh': jwtRefresh,
     'customer': customer,
     'greeting': greeting,
+    'material': material,
   };
 
   @override
