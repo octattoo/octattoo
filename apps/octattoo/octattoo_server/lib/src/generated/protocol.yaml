@@ -27,3 +27,4 @@ material:
   - deleteMaterial:
   - toggleInkStatus:
   - setNeedleQuantity:
+  - listExpiringMaterials:

@@ -668,6 +668,16 @@ class Endpoints extends _i1.EndpointDispatch {
                     quantity: params['quantity'],
                   ),
         ),
+        'listExpiringMaterials': _i1.MethodConnector(
+          name: 'listExpiringMaterials',
+          params: {},
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async => (endpoints['material'] as _i7.MaterialEndpoint)
+                  .listExpiringMaterials(session),
+        ),
       },
     );
     modules['serverpod_auth_idp'] = _i9.Endpoints()

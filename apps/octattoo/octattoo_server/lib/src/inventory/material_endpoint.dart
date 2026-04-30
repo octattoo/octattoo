@@ -1,6 +1,7 @@
 import 'package:serverpod/serverpod.dart';
 
 import '../generated/protocol.dart';
+import 'expiration_filter.dart';
 
 class MaterialEndpoint extends Endpoint {
   @override
@@ -190,6 +191,29 @@ class MaterialEndpoint extends Endpoint {
         quantity == 0 ? MaterialStatus.empty : MaterialStatus.inStock;
 
     return Material.db.updateRow(session, existing);
+  }
+
+  /// Lists materials nearing expiration for the current artist profile.
+  Future<List<Material>> listExpiringMaterials(Session session) async {
+    final artistProfileId = await _getArtistProfileId(session);
+
+    final profile = await ArtistProfile.db.findFirstRow(
+      session,
+      where: (t) => t.id.equals(artistProfileId),
+    );
+
+    final materials = await Material.db.find(
+      session,
+      where: (t) =>
+          t.artistProfileId.equals(artistProfileId) &
+          t.status.equals(MaterialStatus.inStock),
+    );
+
+    return ExpirationFilter.filterExpiring(
+      materials,
+      thresholdDays: profile?.expirationAlertDays ?? 30,
+      now: DateTime.now(),
+    );
   }
 
   Future<UuidValue> _getArtistProfileId(Session session) async {

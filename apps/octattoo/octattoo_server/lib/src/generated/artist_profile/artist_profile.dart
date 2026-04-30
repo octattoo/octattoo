@@ -19,12 +19,14 @@ abstract class ArtistProfile
     this.id,
     required this.authUserId,
     required this.name,
-  });
+    int? expirationAlertDays,
+  }) : expirationAlertDays = expirationAlertDays ?? 30;
 
   factory ArtistProfile({
     _i1.UuidValue? id,
     required _i1.UuidValue authUserId,
     required String name,
+    int? expirationAlertDays,
   }) = _ArtistProfileImpl;
 
   factory ArtistProfile.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -36,6 +38,7 @@ abstract class ArtistProfile
         jsonSerialization['authUserId'],
       ),
       name: jsonSerialization['name'] as String,
+      expirationAlertDays: jsonSerialization['expirationAlertDays'] as int?,
     );
   }
 
@@ -52,6 +55,9 @@ abstract class ArtistProfile
   /// Display name for the artist.
   String name;
 
+  /// Days before expiration to trigger alerts (default 30).
+  int expirationAlertDays;
+
   @override
   _i1.Table<_i1.UuidValue?> get table => t;
 
@@ -62,6 +68,7 @@ abstract class ArtistProfile
     _i1.UuidValue? id,
     _i1.UuidValue? authUserId,
     String? name,
+    int? expirationAlertDays,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -70,6 +77,7 @@ abstract class ArtistProfile
       if (id != null) 'id': id?.toJson(),
       'authUserId': authUserId.toJson(),
       'name': name,
+      'expirationAlertDays': expirationAlertDays,
     };
   }
 
@@ -80,6 +88,7 @@ abstract class ArtistProfile
       if (id != null) 'id': id?.toJson(),
       'authUserId': authUserId.toJson(),
       'name': name,
+      'expirationAlertDays': expirationAlertDays,
     };
   }
 
@@ -120,10 +129,12 @@ class _ArtistProfileImpl extends ArtistProfile {
     _i1.UuidValue? id,
     required _i1.UuidValue authUserId,
     required String name,
+    int? expirationAlertDays,
   }) : super._(
          id: id,
          authUserId: authUserId,
          name: name,
+         expirationAlertDays: expirationAlertDays,
        );
 
   /// Returns a shallow copy of this [ArtistProfile]
@@ -134,11 +145,13 @@ class _ArtistProfileImpl extends ArtistProfile {
     Object? id = _Undefined,
     _i1.UuidValue? authUserId,
     String? name,
+    int? expirationAlertDays,
   }) {
     return ArtistProfile(
       id: id is _i1.UuidValue? ? id : this.id,
       authUserId: authUserId ?? this.authUserId,
       name: name ?? this.name,
+      expirationAlertDays: expirationAlertDays ?? this.expirationAlertDays,
     );
   }
 }
@@ -157,6 +170,11 @@ class ArtistProfileUpdateTable extends _i1.UpdateTable<ArtistProfileTable> {
     table.name,
     value,
   );
+
+  _i1.ColumnValue<int, int> expirationAlertDays(int value) => _i1.ColumnValue(
+    table.expirationAlertDays,
+    value,
+  );
 }
 
 class ArtistProfileTable extends _i1.Table<_i1.UuidValue?> {
@@ -171,6 +189,11 @@ class ArtistProfileTable extends _i1.Table<_i1.UuidValue?> {
       'name',
       this,
     );
+    expirationAlertDays = _i1.ColumnInt(
+      'expirationAlertDays',
+      this,
+      hasDefault: true,
+    );
   }
 
   late final ArtistProfileUpdateTable updateTable;
@@ -181,11 +204,15 @@ class ArtistProfileTable extends _i1.Table<_i1.UuidValue?> {
   /// Display name for the artist.
   late final _i1.ColumnString name;
 
+  /// Days before expiration to trigger alerts (default 30).
+  late final _i1.ColumnInt expirationAlertDays;
+
   @override
   List<_i1.Column> get columns => [
     id,
     authUserId,
     name,
+    expirationAlertDays,
   ];
 }
 

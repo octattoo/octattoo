@@ -66,6 +66,13 @@ class Protocol extends _i1.SerializationManagerServer {
           isNullable: false,
           dartType: 'String',
         ),
+        _i2.ColumnDefinition(
+          name: 'expirationAlertDays',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+          columnDefault: '30',
+        ),
       ],
       foreignKeys: [],
       indexes: [

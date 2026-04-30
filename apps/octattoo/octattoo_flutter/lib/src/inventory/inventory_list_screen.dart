@@ -57,6 +57,21 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
               ),
             ),
             const SizedBox(height: 8),
+            if (_viewModel.expiringMaterials.isNotEmpty)
+              ExpansionTile(
+                leading: Icon(Icons.warning_amber, color: Colors.orange),
+                title: Text(
+                  '${_viewModel.expiringMaterials.length} material(s) expiring soon',
+                ),
+                children: _viewModel.expiringMaterials
+                    .map((item) => ListTile(
+                          dense: true,
+                          leading: Icon(Icons.warning, color: Colors.orange, size: 18),
+                          title: Text(item.productName),
+                          subtitle: Text(item.batchNumber),
+                        ))
+                    .toList(),
+              ),
             Expanded(
               child: _viewModel.isLoading
                   ? const Center(child: CircularProgressIndicator())
@@ -67,6 +82,9 @@ class _InventoryListScreenState extends State<InventoryListScreen> {
                           itemBuilder: (context, index) {
                             final item = _viewModel.filteredMaterials[index];
                             return ListTile(
+                              leading: _viewModel.isExpiringSoon(item)
+                                  ? Icon(Icons.warning_amber, color: Colors.orange, size: 20)
+                                  : null,
                               title: Text(item.productName),
                               subtitle: Text(
                                 '${item.manufacturer} • ${item.batchNumber}',
