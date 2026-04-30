@@ -19,15 +19,16 @@ import '../customer/customer_endpoint.dart' as _i6;
 import '../greetings/greeting_endpoint.dart' as _i7;
 import '../inventory/material_endpoint.dart' as _i8;
 import '../storage/storage_endpoint.dart' as _i9;
+import '../traceability/session_record_endpoint.dart' as _i10;
 import 'package:octattoo_server/src/generated/appointment/appointment_type.dart'
-    as _i10;
-import 'package:octattoo_server/src/generated/inventory/material_type.dart'
     as _i11;
-import 'dart:typed_data' as _i12;
+import 'package:octattoo_server/src/generated/inventory/material_type.dart'
+    as _i12;
+import 'dart:typed_data' as _i13;
 import 'package:serverpod_auth_idp_server/serverpod_auth_idp_server.dart'
-    as _i13;
-import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
     as _i14;
+import 'package:serverpod_auth_core_server/serverpod_auth_core_server.dart'
+    as _i15;
 
 class Endpoints extends _i1.EndpointDispatch {
   @override
@@ -81,6 +82,12 @@ class Endpoints extends _i1.EndpointDispatch {
           'storage',
           null,
         ),
+      'sessionRecord': _i10.SessionRecordEndpoint()
+        ..initialize(
+          server,
+          'sessionRecord',
+          null,
+        ),
     };
     connectors['appointment'] = _i1.EndpointConnector(
       name: 'appointment',
@@ -91,7 +98,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i10.AppointmentType>(),
+              type: _i1.getType<_i11.AppointmentType>(),
               nullable: false,
             ),
             'customerId': _i1.ParameterDescription(
@@ -601,7 +608,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i11.MaterialType>(),
+              type: _i1.getType<_i12.MaterialType>(),
               nullable: false,
             ),
             'manufacturer': _i1.ParameterDescription(
@@ -656,7 +663,7 @@ class Endpoints extends _i1.EndpointDispatch {
           params: {
             'type': _i1.ParameterDescription(
               name: 'type',
-              type: _i1.getType<_i11.MaterialType?>(),
+              type: _i1.getType<_i12.MaterialType?>(),
               nullable: true,
             ),
             'search': _i1.ParameterDescription(
@@ -838,7 +845,7 @@ class Endpoints extends _i1.EndpointDispatch {
             ),
             'bytes': _i1.ParameterDescription(
               name: 'bytes',
-              type: _i1.getType<_i12.ByteData>(),
+              type: _i1.getType<_i13.ByteData>(),
               nullable: false,
             ),
           },
@@ -947,9 +954,35 @@ class Endpoints extends _i1.EndpointDispatch {
         ),
       },
     );
-    modules['serverpod_auth_idp'] = _i13.Endpoints()
+    connectors['sessionRecord'] = _i1.EndpointConnector(
+      name: 'sessionRecord',
+      endpoint: endpoints['sessionRecord']!,
+      methodConnectors: {
+        'getByAppointmentId': _i1.MethodConnector(
+          name: 'getByAppointmentId',
+          params: {
+            'appointmentId': _i1.ParameterDescription(
+              name: 'appointmentId',
+              type: _i1.getType<_i1.UuidValue>(),
+              nullable: false,
+            ),
+          },
+          call:
+              (
+                _i1.Session session,
+                Map<String, dynamic> params,
+              ) async =>
+                  (endpoints['sessionRecord'] as _i10.SessionRecordEndpoint)
+                      .getByAppointmentId(
+                        session,
+                        params['appointmentId'],
+                      ),
+        ),
+      },
+    );
+    modules['serverpod_auth_idp'] = _i14.Endpoints()
       ..initializeEndpoints(server);
-    modules['serverpod_auth_core'] = _i14.Endpoints()
+    modules['serverpod_auth_core'] = _i15.Endpoints()
       ..initializeEndpoints(server);
   }
 }

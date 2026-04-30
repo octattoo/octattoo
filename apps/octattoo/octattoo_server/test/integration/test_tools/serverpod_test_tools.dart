@@ -31,6 +31,8 @@ import 'package:octattoo_server/src/generated/inventory/material_type.dart'
     as _i12;
 import 'package:octattoo_server/src/generated/storage/stored_file.dart' as _i13;
 import 'dart:typed_data' as _i14;
+import 'package:octattoo_server/src/generated/traceability/session_record.dart'
+    as _i15;
 import 'package:octattoo_server/src/generated/protocol.dart';
 import 'package:octattoo_server/src/generated/endpoints.dart';
 export 'package:serverpod_test/serverpod_test_public_exports.dart';
@@ -160,6 +162,8 @@ class TestEndpoints {
   late final _MaterialEndpoint material;
 
   late final _StorageEndpoint storage;
+
+  late final _SessionRecordEndpoint sessionRecord;
 }
 
 class _InternalTestEndpoints extends TestEndpoints
@@ -198,6 +202,10 @@ class _InternalTestEndpoints extends TestEndpoints
       serializationManager,
     );
     storage = _StorageEndpoint(
+      endpoints,
+      serializationManager,
+    );
+    sessionRecord = _SessionRecordEndpoint(
       endpoints,
       serializationManager,
     );
@@ -1458,6 +1466,48 @@ class _StorageEndpoint {
                   _localCallContext.arguments,
                 )
                 as _i3.Future<void>);
+        return _localReturnValue;
+      } finally {
+        await _localUniqueSession.close();
+      }
+    });
+  }
+}
+
+class _SessionRecordEndpoint {
+  _SessionRecordEndpoint(
+    this._endpointDispatch,
+    this._serializationManager,
+  );
+
+  final _i2.EndpointDispatch _endpointDispatch;
+
+  final _i2.SerializationManager _serializationManager;
+
+  _i3.Future<_i15.SessionRecord?> getByAppointmentId(
+    _i1.TestSessionBuilder sessionBuilder,
+    _i2.UuidValue appointmentId,
+  ) async {
+    return _i1.callAwaitableFunctionAndHandleExceptions(() async {
+      var _localUniqueSession =
+          (sessionBuilder as _i1.InternalTestSessionBuilder).internalBuild(
+            endpoint: 'sessionRecord',
+            method: 'getByAppointmentId',
+          );
+      try {
+        var _localCallContext = await _endpointDispatch.getMethodCallContext(
+          createSessionCallback: (_) => _localUniqueSession,
+          endpointPath: 'sessionRecord',
+          methodName: 'getByAppointmentId',
+          parameters: _i1.testObjectToJson({'appointmentId': appointmentId}),
+          serializationManager: _serializationManager,
+        );
+        var _localReturnValue =
+            await (_localCallContext.method.call(
+                  _localUniqueSession,
+                  _localCallContext.arguments,
+                )
+                as _i3.Future<_i15.SessionRecord?>);
         return _localReturnValue;
       } finally {
         await _localUniqueSession.close();

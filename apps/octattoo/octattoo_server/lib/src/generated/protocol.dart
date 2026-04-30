@@ -29,10 +29,11 @@ import 'inventory/material_status.dart' as _i14;
 import 'inventory/material_type.dart' as _i15;
 import 'storage/storage_quota_exceeded_exception.dart' as _i16;
 import 'storage/stored_file.dart' as _i17;
+import 'traceability/session_record.dart' as _i18;
 import 'package:octattoo_server/src/generated/appointment/appointment.dart'
-    as _i18;
-import 'package:octattoo_server/src/generated/customer/customer.dart' as _i19;
-import 'package:octattoo_server/src/generated/inventory/material.dart' as _i20;
+    as _i19;
+import 'package:octattoo_server/src/generated/customer/customer.dart' as _i20;
+import 'package:octattoo_server/src/generated/inventory/material.dart' as _i21;
 export 'appointment/appointment.dart';
 export 'appointment/appointment_material.dart';
 export 'appointment/appointment_status.dart';
@@ -46,6 +47,7 @@ export 'inventory/material_status.dart';
 export 'inventory/material_type.dart';
 export 'storage/storage_quota_exceeded_exception.dart';
 export 'storage/stored_file.dart';
+export 'traceability/session_record.dart';
 
 class Protocol extends _i1.SerializationManagerServer {
   Protocol._();
@@ -597,6 +599,81 @@ class Protocol extends _i1.SerializationManagerServer {
       managed: true,
     ),
     _i2.TableDefinition(
+      name: 'session_record',
+      dartName: 'SessionRecord',
+      schema: 'public',
+      module: 'octattoo',
+      columns: [
+        _i2.ColumnDefinition(
+          name: 'id',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue?',
+          columnDefault: 'gen_random_uuid_v7()',
+        ),
+        _i2.ColumnDefinition(
+          name: 'appointmentId',
+          columnType: _i2.ColumnType.uuid,
+          isNullable: false,
+          dartType: 'UuidValue',
+        ),
+        _i2.ColumnDefinition(
+          name: 'hash',
+          columnType: _i2.ColumnType.text,
+          isNullable: false,
+          dartType: 'String',
+        ),
+        _i2.ColumnDefinition(
+          name: 'sealedAt',
+          columnType: _i2.ColumnType.timestampWithoutTimeZone,
+          isNullable: false,
+          dartType: 'DateTime',
+        ),
+        _i2.ColumnDefinition(
+          name: 'version',
+          columnType: _i2.ColumnType.bigint,
+          isNullable: false,
+          dartType: 'int',
+        ),
+        _i2.ColumnDefinition(
+          name: 'previousHash',
+          columnType: _i2.ColumnType.text,
+          isNullable: true,
+          dartType: 'String?',
+        ),
+      ],
+      foreignKeys: [],
+      indexes: [
+        _i2.IndexDefinition(
+          indexName: 'session_record_pkey',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'id',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: true,
+        ),
+        _i2.IndexDefinition(
+          indexName: 'session_record_appointment_id_idx',
+          tableSpace: null,
+          elements: [
+            _i2.IndexElementDefinition(
+              type: _i2.IndexElementDefinitionType.column,
+              definition: 'appointmentId',
+            ),
+          ],
+          type: 'btree',
+          isUnique: true,
+          isPrimary: false,
+        ),
+      ],
+      managed: true,
+    ),
+    _i2.TableDefinition(
       name: 'stored_file',
       dartName: 'StoredFile',
       schema: 'public',
@@ -762,6 +839,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i17.StoredFile) {
       return _i17.StoredFile.fromJson(data) as T;
     }
+    if (t == _i18.SessionRecord) {
+      return _i18.SessionRecord.fromJson(data) as T;
+    }
     if (t == _i1.getType<_i5.Appointment?>()) {
       return (data != null ? _i5.Appointment.fromJson(data) : null) as T;
     }
@@ -806,22 +886,25 @@ class Protocol extends _i1.SerializationManagerServer {
     if (t == _i1.getType<_i17.StoredFile?>()) {
       return (data != null ? _i17.StoredFile.fromJson(data) : null) as T;
     }
+    if (t == _i1.getType<_i18.SessionRecord?>()) {
+      return (data != null ? _i18.SessionRecord.fromJson(data) : null) as T;
+    }
     if (t == List<_i11.Customer>) {
       return (data as List).map((e) => deserialize<_i11.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i18.Appointment>) {
+    if (t == List<_i19.Appointment>) {
       return (data as List)
-              .map((e) => deserialize<_i18.Appointment>(e))
+              .map((e) => deserialize<_i19.Appointment>(e))
               .toList()
           as T;
     }
-    if (t == List<_i19.Customer>) {
-      return (data as List).map((e) => deserialize<_i19.Customer>(e)).toList()
+    if (t == List<_i20.Customer>) {
+      return (data as List).map((e) => deserialize<_i20.Customer>(e)).toList()
           as T;
     }
-    if (t == List<_i20.Material>) {
-      return (data as List).map((e) => deserialize<_i20.Material>(e)).toList()
+    if (t == List<_i21.Material>) {
+      return (data as List).map((e) => deserialize<_i21.Material>(e)).toList()
           as T;
     }
     try {
@@ -851,6 +934,7 @@ class Protocol extends _i1.SerializationManagerServer {
       _i15.MaterialType => 'MaterialType',
       _i16.StorageQuotaExceededException => 'StorageQuotaExceededException',
       _i17.StoredFile => 'StoredFile',
+      _i18.SessionRecord => 'SessionRecord',
       _ => null,
     };
   }
@@ -891,6 +975,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return 'StorageQuotaExceededException';
       case _i17.StoredFile():
         return 'StoredFile';
+      case _i18.SessionRecord():
+        return 'SessionRecord';
     }
     className = _i2.Protocol().getClassNameForObject(data);
     if (className != null) {
@@ -952,6 +1038,9 @@ class Protocol extends _i1.SerializationManagerServer {
     if (dataClassName == 'StoredFile') {
       return deserialize<_i17.StoredFile>(data['data']);
     }
+    if (dataClassName == 'SessionRecord') {
+      return deserialize<_i18.SessionRecord>(data['data']);
+    }
     if (dataClassName.startsWith('serverpod.')) {
       data['className'] = dataClassName.substring(10);
       return _i2.Protocol().deserializeByClassName(data);
@@ -1000,6 +1089,8 @@ class Protocol extends _i1.SerializationManagerServer {
         return _i13.Material.t;
       case _i17.StoredFile:
         return _i17.StoredFile.t;
+      case _i18.SessionRecord:
+        return _i18.SessionRecord.t;
     }
     return null;
   }
