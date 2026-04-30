@@ -1,3 +1,9 @@
+appointment:
+  - createAppointment:
+  - startAppointment:
+  - finalizeAppointment:
+  - recordMaterial:
+  - listAppointments:
 artistProfile:
   - getMyProfileId:
 emailIdp:

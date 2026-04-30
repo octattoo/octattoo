@@ -1,0 +1,7 @@
+### The lifecycle status of an Appointment.
+enum: AppointmentStatus
+
+values:
+  - scheduled
+  - inProgress
+  - finalized

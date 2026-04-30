@@ -1,0 +1,7 @@
+### The type of an Appointment.
+enum: AppointmentType
+
+values:
+  - tattoo
+  - consultation
+  - touchUp
