@@ -230,7 +230,6 @@ void main() {
       expect(results.every((r) => r.contacted == false), isTrue);
 
       // Mark Alice as contacted
-      final alice = results.firstWhere((r) => r.customerName == 'Alice');
       final dbSession = session.build();
       final customer = await Customer.db.findFirstRow(
         dbSession,
