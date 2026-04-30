@@ -10,6 +10,8 @@ fields:
   name: String
   ### Days before expiration to trigger alerts (default 30).
   expirationAlertDays: int, default=30
+  ### Storage quota in bytes (default 500MB free tier).
+  storageQuotaBytes: int, default=524288000
 
 indexes:
   artist_profile_auth_user_id_unique:

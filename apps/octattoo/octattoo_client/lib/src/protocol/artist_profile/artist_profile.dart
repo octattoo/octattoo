@@ -19,13 +19,16 @@ abstract class ArtistProfile implements _i1.SerializableModel {
     required this.authUserId,
     required this.name,
     int? expirationAlertDays,
-  }) : expirationAlertDays = expirationAlertDays ?? 30;
+    int? storageQuotaBytes,
+  }) : expirationAlertDays = expirationAlertDays ?? 30,
+       storageQuotaBytes = storageQuotaBytes ?? 524288000;
 
   factory ArtistProfile({
     _i1.UuidValue? id,
     required _i1.UuidValue authUserId,
     required String name,
     int? expirationAlertDays,
+    int? storageQuotaBytes,
   }) = _ArtistProfileImpl;
 
   factory ArtistProfile.fromJson(Map<String, dynamic> jsonSerialization) {
@@ -38,6 +41,7 @@ abstract class ArtistProfile implements _i1.SerializableModel {
       ),
       name: jsonSerialization['name'] as String,
       expirationAlertDays: jsonSerialization['expirationAlertDays'] as int?,
+      storageQuotaBytes: jsonSerialization['storageQuotaBytes'] as int?,
     );
   }
 
@@ -55,6 +59,9 @@ abstract class ArtistProfile implements _i1.SerializableModel {
   /// Days before expiration to trigger alerts (default 30).
   int expirationAlertDays;
 
+  /// Storage quota in bytes (default 500MB free tier).
+  int storageQuotaBytes;
+
   /// Returns a shallow copy of this [ArtistProfile]
   /// with some or all fields replaced by the given arguments.
   @_i1.useResult
@@ -63,6 +70,7 @@ abstract class ArtistProfile implements _i1.SerializableModel {
     _i1.UuidValue? authUserId,
     String? name,
     int? expirationAlertDays,
+    int? storageQuotaBytes,
   });
   @override
   Map<String, dynamic> toJson() {
@@ -72,6 +80,7 @@ abstract class ArtistProfile implements _i1.SerializableModel {
       'authUserId': authUserId.toJson(),
       'name': name,
       'expirationAlertDays': expirationAlertDays,
+      'storageQuotaBytes': storageQuotaBytes,
     };
   }
 
@@ -89,11 +98,13 @@ class _ArtistProfileImpl extends ArtistProfile {
     required _i1.UuidValue authUserId,
     required String name,
     int? expirationAlertDays,
+    int? storageQuotaBytes,
   }) : super._(
          id: id,
          authUserId: authUserId,
          name: name,
          expirationAlertDays: expirationAlertDays,
+         storageQuotaBytes: storageQuotaBytes,
        );
 
   /// Returns a shallow copy of this [ArtistProfile]
@@ -105,12 +116,14 @@ class _ArtistProfileImpl extends ArtistProfile {
     _i1.UuidValue? authUserId,
     String? name,
     int? expirationAlertDays,
+    int? storageQuotaBytes,
   }) {
     return ArtistProfile(
       id: id is _i1.UuidValue? ? id : this.id,
       authUserId: authUserId ?? this.authUserId,
       name: name ?? this.name,
       expirationAlertDays: expirationAlertDays ?? this.expirationAlertDays,
+      storageQuotaBytes: storageQuotaBytes ?? this.storageQuotaBytes,
     );
   }
 }

@@ -34,3 +34,10 @@ material:
   - toggleInkStatus:
   - setNeedleQuantity:
   - listExpiringMaterials:
+storage:
+  - uploadFile:
+  - getFile:
+  - deleteFile:
+  - getVariantUrl:
+  - getStorageUsage:
+  - setStorageQuota:
