@@ -15,3 +15,9 @@ Multi-context layout — `CONTEXT-MAP.md` at root points to per-context `CONTEXT
 ### Domain language
 
 Use terms from the relevant `CONTEXT.md` glossary in code (class names, variables, comments). See `CONTEXT-MAP.md` for the context map.
+
+## Git workflow
+
+### Branch cleanup
+
+After merging a PR from a `feat/` branch to `main`, **always** delete the remote and local feature branch immediately. Keep the branch list clean.
